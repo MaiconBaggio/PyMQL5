@@ -35,26 +35,38 @@ string MqlRatesToString(MqlRates &Rates[], int sizeArray){
 string DoubleArrayToString(double &Values[], int sizeArray){
    string result = "";
    for(int i = 0; i < sizeArray; i++){
-      if(i != 0) result += ";";
+      if(i != 0) result += ",";
       result += DoubleToString(Values[i], _Digits_);
    }
    return result;
 }
 
-string CopyTicksToString(string symbol, uint flags, ulong from, uint count){
+string LongArrayToString(long &Values[], int sizeArray){
+   string result = "";
+   for(int i = 0; i < sizeArray; i++){
+      if(i != 0) result += ",";
+      result += IntegerToString(Values[i], _Digits_);
+   }
+   return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// CopyTicks
+////////////////////////////////////////////////////////////////////////////////////////////
+string CopyTicksToString(string symbol, ulong from, uint count){
    MqlTick ticks[];
-   int sizeTicks = CopyTicks(symbol, ticks, flags, from, count);
+   int sizeTicks = CopyTicks(symbol, ticks, COPY_TICKS_TRADE, from, count);
    return MqlTickToString(ticks, sizeTicks);
 }
 
-string CopyTicksRangeToString(string symbol, uint flags, ulong from, ulong count){
+string CopyTicksRangeToString(string symbol, ulong from, ulong count){
    MqlTick ticks[];
-   int sizeTicks = CopyTicksRange(symbol, ticks, flags, from, count);
+   int sizeTicks = CopyTicksRange(symbol, ticks, COPY_TICKS_TRADE, from, count);
    return MqlTickToString(ticks, sizeTicks);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// TimeSeries Copys
+// CopyRates
 ////////////////////////////////////////////////////////////////////////////////////////////
 string CopyRatesToString(string symbol, ENUM_TIMEFRAMES timeframe, int start_pos, int count){
    MqlRates rates[];
@@ -74,28 +86,113 @@ string CopyRatesTTToString(string symbol, ENUM_TIMEFRAMES timeframe, datetime st
    return MqlRatesToString(rates, sizeCopy);
 }
 
-string CopyOpenToString(string symbol, ENUM_TIMEFRAMES timeframe, datetime start_pos, int count){
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// CopyOpen
+////////////////////////////////////////////////////////////////////////////////////////////
+string CopyOpenToString(string symbol, ENUM_TIMEFRAMES timeframe, int start_pos, int count){
    double Values[];
    int sizeCopy = CopyOpen(symbol, timeframe, start_pos, count, Values);
    return DoubleArrayToString(Values, sizeCopy);    
 }
 
-string CopyHighToString(string symbol, ENUM_TIMEFRAMES timeframe, datetime start_pos, int count){
+string CopyOpenTCToString(string symbol, ENUM_TIMEFRAMES timeframe, datetime start_time, int count){
+   double Values[];
+   int sizeCopy = CopyOpen(symbol, timeframe, start_time, count, Values);
+   return DoubleArrayToString(Values, sizeCopy);    
+}
+
+string CopyOpenTTToString(string symbol, ENUM_TIMEFRAMES timeframe, datetime start_time,  datetime stop_time){
+   double Values[];
+   int sizeCopy = CopyOpen(symbol, timeframe, start_time, stop_time, Values);
+   return DoubleArrayToString(Values, sizeCopy);    
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// CopyHigh
+////////////////////////////////////////////////////////////////////////////////////////////
+string CopyHighToString(string symbol, ENUM_TIMEFRAMES timeframe, int start_pos, int count){
    double Values[];
    int sizeCopy = CopyHigh(symbol, timeframe, start_pos, count, Values);
    return DoubleArrayToString(Values, sizeCopy);    
 }
-string CopyLowToString(string symbol, ENUM_TIMEFRAMES timeframe, datetime start_pos, int count){
+
+string CopyHighTCToString(string symbol, ENUM_TIMEFRAMES timeframe, datetime start_time, int count){
+   double Values[];
+   int sizeCopy = CopyHigh(symbol, timeframe, start_time, count, Values);
+   return DoubleArrayToString(Values, sizeCopy);    
+}
+
+string CopyHighTTToString(string symbol, ENUM_TIMEFRAMES timeframe, datetime start_time, datetime stop_time){
+   double Values[];
+   int sizeCopy = CopyHigh(symbol, timeframe, start_time, stop_time, Values);
+   return DoubleArrayToString(Values, sizeCopy);    
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// CopyLow
+////////////////////////////////////////////////////////////////////////////////////////////
+string CopyLowToString(string symbol, ENUM_TIMEFRAMES timeframe, int start_pos, int count){
    double Values[];
    int sizeCopy = CopyLow(symbol, timeframe, start_pos, count, Values);
    return DoubleArrayToString(Values, sizeCopy);    
 }
 
+string CopyLowTCToString(string symbol, ENUM_TIMEFRAMES timeframe,  datetime start_time, int count){
+   double Values[];
+   int sizeCopy = CopyLow(symbol, timeframe, start_time, count, Values);
+   return DoubleArrayToString(Values, sizeCopy);    
+}
 
-string CopyCloseToString(string symbol, ENUM_TIMEFRAMES timeframe, datetime start_pos, int count){
+string CopyLowTTToString(string symbol, ENUM_TIMEFRAMES timeframe, datetime start_time, datetime stop_time){
+   double Values[];
+   int sizeCopy = CopyLow(symbol, timeframe, start_time, stop_time, Values);
+   return DoubleArrayToString(Values, sizeCopy);    
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// CopyClose
+////////////////////////////////////////////////////////////////////////////////////////////
+string CopyCloseToString(string symbol, ENUM_TIMEFRAMES timeframe, int start_pos, int count){
    double Values[];
    int sizeCopy = CopyClose(symbol, timeframe, start_pos, count, Values);
    return DoubleArrayToString(Values, sizeCopy);    
+}
+
+string CopyCloseTCToString(string symbol, ENUM_TIMEFRAMES timeframe, datetime start_time, int count){
+   double Values[];
+   int sizeCopy = CopyClose(symbol, timeframe, start_time, count, Values);
+   return DoubleArrayToString(Values, sizeCopy);    
+}
+
+string CopyCloseTTToString(string symbol, ENUM_TIMEFRAMES timeframe, datetime start_time, datetime stop_time){
+   double Values[];
+   int sizeCopy = CopyClose(symbol, timeframe, start_time, stop_time, Values);
+   return DoubleArrayToString(Values, sizeCopy);    
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// CopyVolume
+////////////////////////////////////////////////////////////////////////////////////////////
+string CopyVolumeToString(string symbol, ENUM_TIMEFRAMES timeframe, int start_pos, int count){
+   long Values[];
+   int sizeCopy = CopyRealVolume(symbol, timeframe, start_pos, count, Values);
+   return LongArrayToString(Values, sizeCopy);    
+}
+
+string CopyVolumeTCToString(string symbol, ENUM_TIMEFRAMES timeframe, datetime start_time, int count){
+   long Values[];
+   int sizeCopy = CopyRealVolume(symbol, timeframe, start_time, count, Values);
+   return LongArrayToString(Values, sizeCopy);    
+}
+
+string CopyVolumeTTToString(string symbol, ENUM_TIMEFRAMES timeframe, datetime start_time, datetime stop_time){
+   long Values[];
+   int sizeCopy = CopyRealVolume(symbol, timeframe, start_time, stop_time, Values);
+   return LongArrayToString(Values, sizeCopy);    
 }
 
 

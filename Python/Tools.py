@@ -3,11 +3,11 @@ def MQL5parse(text):
         return text
     text = text[0:len(text) - 1]    
     Array = text.split(";")
-    resultArray = []
-    if len(Array) == 1:
-        return Array[0]
+    resultArray = []    
     for i in Array:
-        resultArray.append(i.split(","))
+        resultArray.append(i.split(","))      
+    if len(Array) == 1 and len(resultArray[0]) == 1:
+        return resultArray[0][0]
     return resultArray
 
 def MQL5Period(text):

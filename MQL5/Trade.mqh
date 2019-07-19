@@ -1,6 +1,6 @@
 #include <Trade\Trade.mqh>
  
-CTrade trade = new CTrade();
+CTrade *trade = new CTrade();
  
 string Buy(string symbol, double volume, double price, double sl, double tp, string comment){
    if(trade.Buy(volume, symbol, price, sl, tp, comment)){

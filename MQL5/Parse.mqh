@@ -1,6 +1,6 @@
 #include "TimeSeries.mqh"
 #include "Trade.mqh"
-//#include "ConstantesNegociacao.mqh"
+#include "ConstantesNegociacao.mqh"
 
 #define command 0
 
@@ -8,6 +8,47 @@ string Parse(string str){
    string result[];
    int sizeSplit = StringSplit(str, 44, result);
    
+   
+   if(sizeSplit == 1){
+   
+      if(result[command] == "orderstotal")
+         return OrdersTotalToString();
+    
+      if(result[command] == "orderall")
+         return OrderAll();
+    
+      if(result[command] == "positionstotal")
+         return PositionsTotalToString();
+   
+      if(result[command] == "positionall")
+         return PositionAll();
+         
+      if(result[command] == "accountinfoall") 
+         return AccountInfoAll();  
+         
+      if(result[command] == "historydealtotalday")   
+         return IntegerToString(HistoryDealGetTotalDay());
+         
+      if(result[command] == "historydealallday")   
+         return HistoryDealAllDay();   
+   }
+   
+   
+   if(sizeSplit == 3){
+      if(result[command] == "historydealtotal")
+         return IntegerToString(HistoryDealGetTotal(StringToTime(result[1]), StringToTime(result[2])));
+      
+      if(result[command] == "historydealall")
+         return HistoryDealAll(StringToTime(result[1]), StringToTime(result[2]));
+      
+      if(result[command] == "ordergettimestup")
+         return OrderGetTimeSetup(StringToInteger(result[1]));
+      if(result[command] == "ordergettype")
+         return OrderGetType(StringToInteger(result[1]));  
+      if(result[command] == "ordergetstate")
+         return OrderGetState(StringToInteger(result[1]));  
+                       
+   }
    
    if(sizeSplit == 4){
       
@@ -23,6 +64,11 @@ string Parse(string str){
          return iTimeToString(result[1], StringToTimeFrames(result[2]), (int)StringToInteger(result[3]));      
       if(result[command] == "ivolume")
          return iVolumeToString(result[1], StringToTimeFrames(result[2]), (int)StringToInteger(result[3]));   
+      
+      if(result[command] == "copyticks")
+         return CopyTicksToString(result[1], StringToTime(result[2]), (int)StringToInteger(result[3]));
+      if(result[command] == "copyticksrange")
+         return CopyTicksRangeToString(result[1], StringToTime(result[2]), StringToTime(result[3]));     
    }   
    
    if(sizeSplit == 5){
@@ -32,6 +78,44 @@ string Parse(string str){
          return CopyRatesTCToString(result[1], StringToTimeFrames(result[2]), StringToTime(result[3]), (int)StringToInteger(result[4]));   
       if(result[command] == "copyratesTT")
          return CopyRatesTTToString(result[1], StringToTimeFrames(result[2]), StringToTime(result[3]), StringToTime(result[4]));   
+         
+     
+      if(result[command] == "copyopen")
+         return CopyOpenToString(result[1], StringToTimeFrames(result[2]), (int)StringToInteger(result[3]), (int)StringToInteger(result[4]));
+      if(result[command] == "copyopenTC")
+         return CopyOpenTCToString(result[1], StringToTimeFrames(result[2]), StringToTime(result[3]), (int)StringToInteger(result[4])); 
+      if(result[command] == "copyopenTT")
+         return CopyOpenTTToString(result[1], StringToTimeFrames(result[2]), StringToTime(result[3]), StringToTime(result[4]));   
+         
+      if(result[command] == "copyhigh")
+         return CopyHighToString(result[1], StringToTimeFrames(result[2]), (int)StringToInteger(result[3]), (int)StringToInteger(result[4]));
+      if(result[command] == "copyhighTC")
+         return CopyHighTCToString(result[1], StringToTimeFrames(result[2]), StringToTime(result[3]), (int)StringToInteger(result[4])); 
+      if(result[command] == "copyhighTT")
+         return CopyHighTTToString(result[1], StringToTimeFrames(result[2]), StringToTime(result[3]), StringToTime(result[4]));      
+         
+      if(result[command] == "copylow")
+         return CopyLowToString(result[1], StringToTimeFrames(result[2]), (int)StringToInteger(result[3]), (int)StringToInteger(result[4]));
+      if(result[command] == "copylowTC")
+         return CopyLowTCToString(result[1], StringToTimeFrames(result[2]), StringToTime(result[3]), (int)StringToInteger(result[4])); 
+      if(result[command] == "copylowTT")
+         return CopyHighTTToString(result[1], StringToTimeFrames(result[2]), StringToTime(result[3]), StringToTime(result[4]));         
+     
+      if(result[command] == "copyclose")
+         return CopyCloseToString(result[1], StringToTimeFrames(result[2]), (int)StringToInteger(result[3]), (int)StringToInteger(result[4]));
+      if(result[command] == "copycloseTC")
+         return CopyCloseTCToString(result[1], StringToTimeFrames(result[2]), StringToTime(result[3]), (int)StringToInteger(result[4])); 
+      if(result[command] == "copycloseTT")
+         return CopyCloseTTToString(result[1], StringToTimeFrames(result[2]), StringToTime(result[3]), StringToTime(result[4]));   
+         
+      if(result[command] == "copyvolume")
+         return CopyVolumeToString(result[1], StringToTimeFrames(result[2]), (int)StringToInteger(result[3]), (int)StringToInteger(result[4]));
+      if(result[command] == "copyvolumeTC")
+         return CopyVolumeTCToString(result[1], StringToTimeFrames(result[2]), StringToTime(result[3]), (int)StringToInteger(result[4])); 
+      if(result[command] == "copyvolumeTT")
+         return CopyVolumeTTToString(result[1], StringToTimeFrames(result[2]), StringToTime(result[3]), StringToTime(result[4]));       
+          
+         
    }
    
    if(sizeSplit == 7){
@@ -49,7 +133,6 @@ string Parse(string str){
          return SellStop(result[1], StringToDouble(result[2]), StringToDouble(result[3]), StringToDouble(result[4]), StringToDouble(result[5]), result[6]);               
    }
   
-   Print(sizeSplit);    
    return "";  
 }
 

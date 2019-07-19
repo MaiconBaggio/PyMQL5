@@ -57,6 +57,18 @@ string getENUM_ORDER_TYPE_FILLING(ulong value){
    return "";   
 }
 
+string getENUM_ORDER_TYPE_TIME(ulong value){
+   if(value == ORDER_TIME_GTC)
+      return "ORDER_TIME_GTC";
+   if(value == ORDER_TIME_DAY)   
+      return "ORDER_TIME_DAY";
+   if(value == ORDER_TIME_SPECIFIED)
+      return "ORDER_TIME_SPECIFIED";
+   if(value == ORDER_TIME_SPECIFIED_DAY)
+      return "ORDER_TIME_SPECIFIED_DAY";       
+   return "";   
+}
+
 string OrdersTotalToString(){
    return IntegerToString(OrdersTotal());
 }
@@ -87,25 +99,25 @@ string OrderGetState(ulong ticket){
 
 string OrderGetTimeExpiration(ulong ticket){
    if(OrderSelect(ticket))
-      return getENUM_ORDER_STATE(OrderGetInteger(ORDER_TIME_EXPIRATION));
+      return TimeToString(OrderGetInteger(ORDER_TIME_EXPIRATION), TIME_DATE | TIME_MINUTES | TIME_SECONDS);
    return "";   
 }
 
 string OrderGetTimeDone(ulong ticket){
    if(OrderSelect(ticket))
-      return getENUM_ORDER_STATE(OrderGetInteger(ORDER_TIME_DONE));
+      return TimeToString(OrderGetInteger(ORDER_TIME_DONE), TIME_DATE | TIME_MINUTES | TIME_SECONDS);
    return "";   
 }
 
 string OrderGetTimeSetupMSC(ulong ticket){
    if(OrderSelect(ticket))
-      return getENUM_ORDER_STATE(OrderGetInteger(ORDER_TIME_SETUP_MSC));
+      return IntegerToString(OrderGetInteger(ORDER_TIME_SETUP_MSC));
    return "";   
 }
 
 string OrderGetTimeDoneMSC(ulong ticket){
    if(OrderSelect(ticket))
-      return getENUM_ORDER_STATE(OrderGetInteger(ORDER_TIME_DONE_MSC));
+      return IntegerToString(OrderGetInteger(ORDER_TIME_DONE_MSC));
    return "";   
 }
 
@@ -115,41 +127,119 @@ string OrderGetTypeFilling(ulong ticket){
    return "";   
 }
 
-string OrderGetTimeExpiration(ulong ticket){
+string OrderGetTime(ulong ticket){
    if(OrderSelect(ticket))
-      return getENUM_ORDER_STATE(OrderGetInteger(ORDER_TIME_EXPIRATION));
+      return getENUM_ORDER_TYPE_TIME(OrderGetInteger(ORDER_TYPE_TIME));
    return "";   
 }
 
-string OrderGetTimeExpiration(ulong ticket){
+string OrderGetMagic(ulong ticket){
    if(OrderSelect(ticket))
-      return getENUM_ORDER_STATE(OrderGetInteger(ORDER_TIME_EXPIRATION));
+      return IntegerToString(OrderGetInteger(ORDER_MAGIC));
    return "";   
 }
 
-string OrderGetTimeExpiration(ulong ticket){
+string OrderGetPositionID(ulong ticket){
    if(OrderSelect(ticket))
-      return getENUM_ORDER_STATE(OrderGetInteger(ORDER_TIME_EXPIRATION));
+      return IntegerToString(OrderGetInteger(ORDER_POSITION_ID));
    return "";   
 }
 
-string OrderGetTimeExpiration(ulong ticket){
+string OrderGetPositionBYID(ulong ticket){
    if(OrderSelect(ticket))
-      return getENUM_ORDER_STATE(OrderGetInteger(ORDER_TIME_EXPIRATION));
+      return IntegerToString(OrderGetInteger(ORDER_POSITION_BY_ID));
    return "";   
 }
 
-string OrderGetTimeExpiration(ulong ticket){
+string OrderGetVolumeInitial(ulong ticket){
    if(OrderSelect(ticket))
-      return getENUM_ORDER_STATE(OrderGetInteger(ORDER_TIME_EXPIRATION));
+      return DoubleToString(OrderGetDouble(ORDER_VOLUME_INITIAL));
    return "";   
 }
 
-string OrderGetTimeExpiration(ulong ticket){
+string OrderGetVolumeCurrent(ulong ticket){
    if(OrderSelect(ticket))
-      return getENUM_ORDER_STATE(OrderGetInteger(ORDER_TIME_EXPIRATION));
+      return DoubleToString(OrderGetDouble(ORDER_VOLUME_CURRENT));
    return "";   
 }
+
+string OrderGetPriceOpen(ulong ticket){
+   if(OrderSelect(ticket))
+      return DoubleToString(OrderGetDouble(ORDER_PRICE_OPEN));
+   return "";   
+}
+
+string OrderGetSL(ulong ticket){
+   if(OrderSelect(ticket))
+      return DoubleToString(OrderGetDouble(ORDER_SL));
+   return "";   
+}
+
+string OrderGetTP(ulong ticket){
+   if(OrderSelect(ticket))
+      return DoubleToString(OrderGetDouble(ORDER_TP));
+   return "";   
+}
+
+string OrderGetPriceCurrent(ulong ticket){
+   if(OrderSelect(ticket))
+      return DoubleToString(OrderGetDouble(ORDER_PRICE_CURRENT));
+   return "";   
+}
+
+string OrderGetPriceStopLimit(ulong ticket){
+   if(OrderSelect(ticket))
+      return DoubleToString(OrderGetDouble(ORDER_PRICE_STOPLIMIT));
+   return "";   
+}
+
+string OrderGetSymbol(ulong ticket){
+   if(OrderSelect(ticket))
+      return OrderGetString(ORDER_SYMBOL);
+   return "";   
+}
+
+string OrderGetCommet(ulong ticket){
+   if(OrderSelect(ticket))
+      return OrderGetString(ORDER_COMMENT);
+   return "";   
+}
+
+string OrderAll(){
+   int size = OrdersTotal();
+   ulong ticket;
+   string str = "";
+   for(int i = 0; i < size; i++){
+      ticket = OrderGetTicket(i);
+      if( i != 0) str += ";";
+      if(OrderSelect(ticket)){
+         str += IntegerToString(OrderGetInteger(ORDER_TICKET)) + ",";   
+         str += IntegerToString(OrderGetInteger(ORDER_TIME_SETUP)) + ",";
+         str += getENUM_ORDER_TYPE(OrderGetInteger(ORDER_TYPE)) + ",";
+         str += getENUM_ORDER_STATE(OrderGetInteger(ORDER_STATE)) + ",";
+         str += TimeToString(OrderGetInteger(ORDER_TIME_EXPIRATION), TIME_DATE | TIME_MINUTES | TIME_SECONDS) + ",";
+         str += TimeToString(OrderGetInteger(ORDER_TIME_DONE), TIME_DATE | TIME_MINUTES | TIME_SECONDS) + ",";
+         str += IntegerToString(OrderGetInteger(ORDER_TIME_SETUP_MSC)) + ",";
+         str += IntegerToString(OrderGetInteger(ORDER_TIME_DONE_MSC)) + ",";
+         str += getENUM_ORDER_TYPE_FILLING(OrderGetInteger(ORDER_TYPE_FILLING)) + ",";
+         str += getENUM_ORDER_TYPE_TIME(OrderGetInteger(ORDER_TYPE_TIME)) + ",";
+         str += IntegerToString(OrderGetInteger(ORDER_MAGIC)) + ",";
+         str += IntegerToString(OrderGetInteger(ORDER_POSITION_ID)) + ",";
+         str += IntegerToString(OrderGetInteger(ORDER_POSITION_BY_ID)) + ",";
+         str += DoubleToString(OrderGetDouble(ORDER_VOLUME_INITIAL)) + ",";
+         str += DoubleToString(OrderGetDouble(ORDER_VOLUME_CURRENT)) + ",";
+         str += DoubleToString(OrderGetDouble(ORDER_PRICE_OPEN)) + ",";
+         str += DoubleToString(OrderGetDouble(ORDER_SL)) + ",";
+         str += DoubleToString(OrderGetDouble(ORDER_TP)) + ",";
+         str += DoubleToString(OrderGetDouble(ORDER_PRICE_CURRENT)) + ",";
+         str += DoubleToString(OrderGetDouble(ORDER_PRICE_STOPLIMIT)) + ",";
+         str += OrderGetString(ORDER_SYMBOL) + ",";
+         str += OrderGetString(ORDER_COMMENT);
+      }
+   }   
+   return str;
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////////
 //   Positions
@@ -179,7 +269,7 @@ string PositionGetTiket(string symbol){
 
 string PositionGetTime(string symbol){
    PositionSelect(symbol);
-   return IntegerToString(PositionGetInteger(POSITION_TIME));
+   return TimeToString(PositionGetInteger(POSITION_TIME), TIME_DATE | TIME_MINUTES | TIME_SECONDS);
 }
 
 string PositionGetTimeMSC(string symbol){
@@ -258,27 +348,312 @@ string PositonGetExternalID(string symbol){
 }
 
 string PositionAll(){
-   int size = OrdersTotal();
+   int size = PositionsTotal();
    string str = "", symbol;
    for(int i = 0; i < size; i++){
       if( i != 0) str += ";";
       symbol = PositionGetSymbol(i);
-      str += PositionGetTiket(symbol) + ",";
-      str += PositionGetTimeMSC(symbol) + ",";
-      str += PositionGetTimeUpdate(symbol) + ",";
-      str += PositionGetTimeUpdateMSC(symbol) + ",";
-      str += PositionGetType(symbol) + ",";
-      str += PositionGetMagic(symbol) + ",";
-      str += PositionGetIdentifier(symbol) + ",";
-      str += PositionGetReason(symbol) + ",";
-      str += PositionGetVolume(symbol) + ",";
-      str += PositionGetPriceOpen(symbol) + ",";
-      str += PositionGetSL(symbol) + ",";
-      str += PositionGetTP(symbol) + ",";
-      str += PositionGetPriceCurrent(symbol) + ",";
-      str += PositionGetProfit(symbol) + ",";
-      str += PositonGetCommet(symbol) + ",";
-      str += PositonGetExternalID(symbol);
+      PositionSelect(symbol);
+      str += IntegerToString(PositionGetInteger(POSITION_TICKET)) + ",";
+      str += TimeToString(PositionGetInteger(POSITION_TIME), TIME_DATE | TIME_MINUTES | TIME_SECONDS) + ",";
+      str += IntegerToString(PositionGetInteger(POSITION_TIME_MSC)) + ",";
+      str += IntegerToString(PositionGetInteger(POSITION_TIME_UPDATE))+ ",";
+      str += IntegerToString(PositionGetInteger(POSITION_TIME_UPDATE_MSC)) + ",";
+      str += getENUM_POSITION_TYPE(PositionGetInteger(POSITION_TYPE)) + ",";
+      str += IntegerToString(PositionGetInteger(POSITION_MAGIC)) + ",";
+      str += IntegerToString(PositionGetInteger(POSITION_IDENTIFIER)) + ",";
+      str += getENUM_POSITION_REASON(PositionGetInteger(POSITION_REASON)) + ",";
+      str += DoubleToString(PositionGetDouble(POSITION_VOLUME), _Digits_) + ",";
+      str += DoubleToString(PositionGetDouble(POSITION_PRICE_OPEN), _Digits_) + ",";
+      str += DoubleToString(PositionGetDouble(POSITION_SL), _Digits_) + ",";
+      str += DoubleToString(PositionGetDouble(POSITION_TP), _Digits_)+ ",";
+      str += DoubleToString(PositionGetDouble(POSITION_PRICE_CURRENT), _Digits_) + ",";
+      str += DoubleToString(PositionGetDouble(POSITION_PROFIT), _Digits_) + ",";
+      str += PositionGetString(POSITION_COMMENT) + ",";
+      str += PositionGetString(POSITION_EXTERNAL_ID);
    }
    return str;
 }
+
+///////////////////////////////////////////////////////////////////////////////////
+//    Account Info
+///////////////////////////////////////////////////////////////////////////////////
+
+string getENUM_ACCOUNT_TRADE_MODE(ulong value){
+   if(value == ACCOUNT_TRADE_MODE_DEMO)
+      return "ACCOUNT_TRADE_MODE_DEMO";   
+   if(value == ACCOUNT_TRADE_MODE_CONTEST)
+      return "ACCOUNT_TRADE_MODE_CONTEST";  
+   return "ACCOUNT_TRADE_MODE_REAL";     
+}
+
+string getENUM_ACCOUNT_STOPOUT_MODE(ulong value){
+   if(value == ACCOUNT_STOPOUT_MODE_PERCENT)
+      return "ACCOUNT_STOPOUT_MODE_PERCENT";
+   return "ACCOUNT_STOPOUT_MODE_MONEY";
+}
+
+string getENUM_ACCOUNT_MARGIN_MODE(ulong value){
+   if(value == ACCOUNT_MARGIN_MODE_RETAIL_NETTING)
+      return "ACCOUNT_MARGIN_MODE_RETAIL_NETTING";
+   if(value == ACCOUNT_MARGIN_MODE_EXCHANGE)
+      return "ACCOUNT_MARGIN_MODE_EXCHANGE";
+   return "ACCOUNT_MARGIN_MODE_RETAIL_HEDGING";      
+}  
+
+
+string AccountInfoGetLogin(){
+   return IntegerToString(AccountInfoInteger(ACCOUNT_LOGIN));
+}
+
+string AccountInfoGetTradeMode(){
+   return getENUM_ACCOUNT_TRADE_MODE(AccountInfoInteger(ACCOUNT_TRADE_MODE));
+}
+
+string AccountInfoGetLeverage(){
+   return IntegerToString(AccountInfoInteger(ACCOUNT_LEVERAGE));
+}
+
+string AccountInfoGetLimitOrders(){
+   return IntegerToString(AccountInfoInteger(ACCOUNT_LIMIT_ORDERS));
+}
+
+string AccountInfoGetMarginSOMode(){
+   return getENUM_ACCOUNT_STOPOUT_MODE(AccountInfoInteger(ACCOUNT_MARGIN_SO_MODE));
+}
+
+string AccountInfoGetTradeAllowed(){
+   return IntegerToString(AccountInfoInteger(ACCOUNT_TRADE_ALLOWED));
+}
+
+string AccountInfoGetTradeExpert(){
+   return IntegerToString(AccountInfoInteger(ACCOUNT_TRADE_EXPERT));
+}
+
+string AccountInfoGetMarginMode(){
+   return getENUM_ACCOUNT_MARGIN_MODE(AccountInfoInteger(ACCOUNT_MARGIN_MODE));
+}
+
+string AccountInfoGetCurrencyDigits(){
+   return IntegerToString(AccountInfoInteger(ACCOUNT_CURRENCY_DIGITS));
+}
+
+string AccountInfoGetBalance(){
+   return DoubleToString(AccountInfoDouble(ACCOUNT_BALANCE));
+}
+
+string AccountInfoGetCredit(){
+   return DoubleToString(AccountInfoDouble(ACCOUNT_CREDIT));
+}
+
+string AccountInfoGetProfit(){
+   return DoubleToString(AccountInfoDouble(ACCOUNT_PROFIT));
+}
+
+string AccountInfoGetEquity(){
+   return DoubleToString(AccountInfoDouble(ACCOUNT_EQUITY));
+}
+
+string AccountInfoGetMargin(){
+   return DoubleToString(AccountInfoDouble(ACCOUNT_MARGIN));
+}
+
+string AccountInfoGetMarginFree(){
+   return DoubleToString(AccountInfoDouble(ACCOUNT_MARGIN_FREE));
+}
+
+string AccountInfoGetMarginLevel(){
+   return DoubleToString(AccountInfoDouble(ACCOUNT_MARGIN_LEVEL));
+}
+
+string AccountInfoGetMarginSOCall(){
+   return DoubleToString(AccountInfoDouble(ACCOUNT_MARGIN_SO_CALL));
+}
+
+string AccountInfoGetMarginInitial(){
+   return DoubleToString(AccountInfoDouble(ACCOUNT_MARGIN_INITIAL));
+}
+
+string AccountInfoGetMarginMaintenance(){
+   return DoubleToString(AccountInfoDouble(ACCOUNT_MARGIN_MAINTENANCE));
+}
+
+string AccountInfoGetAssets(){
+   return DoubleToString(AccountInfoDouble(ACCOUNT_ASSETS));
+}
+
+string AccountInfoGetLiabilities(){
+   return DoubleToString(AccountInfoDouble(ACCOUNT_LIABILITIES));
+}
+
+string AccountInfoGetCommissionBlocked(){
+   return DoubleToString(AccountInfoDouble(ACCOUNT_COMMISSION_BLOCKED));
+}
+
+string AccountInfoGetName(){
+   return AccountInfoString(ACCOUNT_NAME);
+}
+
+string AccountInfoGetServer(){
+   return AccountInfoString(ACCOUNT_SERVER);
+}
+
+string AccountInfoGetCurrency(){
+   return AccountInfoString(ACCOUNT_CURRENCY);
+}
+
+string AccountInfoGetCompany(){
+   return AccountInfoString(ACCOUNT_COMPANY);
+}
+
+string AccountInfoAll(){
+   string str = AccountInfoGetLogin() + ",";
+   str +=  AccountInfoGetTradeMode() + ",";
+   str +=  AccountInfoGetLeverage() + ",";
+   str +=  AccountInfoGetLimitOrders() + ",";
+   str +=  AccountInfoGetMarginSOMode() + ",";
+   str +=  AccountInfoGetTradeAllowed() + ",";
+   str +=  AccountInfoGetTradeExpert() + ",";
+   str +=  AccountInfoGetMarginMode() + ",";
+   str +=  AccountInfoGetCurrencyDigits() + ",";
+   str +=  AccountInfoGetBalance() + ",";
+   str +=  AccountInfoGetCredit() + ",";
+   str +=  AccountInfoGetProfit() + ",";
+   str +=  AccountInfoGetEquity() + ",";
+   str +=  AccountInfoGetMargin() + ",";
+   str +=  AccountInfoGetMarginFree() + ",";
+   str +=  AccountInfoGetMarginLevel() + ",";
+   str +=  AccountInfoGetMarginSOCall() + ",";
+   str +=  AccountInfoGetMarginInitial() + ",";
+   str +=  AccountInfoGetMarginMaintenance() + ",";
+   str +=  AccountInfoGetAssets() + ",";
+   str +=  AccountInfoGetLiabilities() + ",";
+   str +=  AccountInfoGetCommissionBlocked() + ",";
+   str +=  AccountInfoGetName() + ",";
+   str +=  AccountInfoGetServer() + ",";
+   str +=  AccountInfoGetCurrency() + ",";
+   str +=  AccountInfoGetCompany();
+   return str;
+}
+
+///////////////////////////////////////////////////////////////////////////////////
+//    History Deal
+///////////////////////////////////////////////////////////////////////////////////
+
+string getENUM_DEAL_TYPE(ulong value){
+   if(value == DEAL_TYPE_BUY)
+      return "DEAL_TYPE_BUY";
+   if(value == DEAL_TYPE_SELL)
+      return "DEAL_TYPE_SELL";
+   if(value == DEAL_TYPE_BALANCE)
+      return "DEAL_TYPE_BALANCE";      
+   if(value == DEAL_TYPE_CREDIT)
+      return "DEAL_TYPE_CREDIT";
+   if(value == DEAL_TYPE_CHARGE)
+      return "DEAL_TYPE_CHARGE";
+   if(value == DEAL_TYPE_CORRECTION)
+      return "DEAL_TYPE_CORRECTION";
+   if(value == DEAL_TYPE_BONUS)
+      return "DEAL_TYPE_BONUS";
+   if(value == DEAL_TYPE_COMMISSION)
+      return "DEAL_TYPE_COMMISSION";
+   if(value == DEAL_TYPE_COMMISSION_DAILY)
+      return "DEAL_TYPE_COMMISSION_DAILY";
+   if(value == DEAL_TYPE_COMMISSION_MONTHLY)
+      return "DEAL_TYPE_COMMISSION_MONTHLY";                     
+   if(value == DEAL_TYPE_COMMISSION_AGENT_DAILY)
+      return "DEAL_TYPE_COMMISSION_AGENT_DAILY";
+   if(value == DEAL_TYPE_COMMISSION_AGENT_MONTHLY)
+      return "DEAL_TYPE_COMMISSION_AGENT_MONTHLY";
+   if(value == DEAL_TYPE_INTEREST)
+      return "DEAL_TYPE_INTEREST";
+   if(value == DEAL_TYPE_BUY_CANCELED)
+      return "DEAL_TYPE_BUY_CANCELED";
+   if(value == DEAL_TYPE_SELL_CANCELED)
+      return "DEAL_TYPE_SELL_CANCELED";
+   if(value == DEAL_DIVIDEND)
+      return "DEAL_DIVIDEND";                  
+   if(value == DEAL_DIVIDEND_FRANKED)
+      return "DEAL_DIVIDEND_FRANKED";
+   return "DEAL_TAX";      
+}
+
+string getENUM_DEAL_ENTRY(ulong value){
+   if(value == DEAL_ENTRY_IN)
+      return "DEAL_ENTRY_IN";
+   if(value == DEAL_ENTRY_OUT)
+      return "DEAL_ENTRY_OUT";
+   if(value == DEAL_ENTRY_INOUT)
+      return "DEAL_ENTRY_INOUT";
+   return "DEAL_ENTRY_OUT_BY";         
+}
+
+string getENUM_DEAL_REASON(ulong value){
+   if(value == DEAL_REASON_CLIENT)
+      return "DEAL_REASON_CLIENT";
+   if(value == DEAL_REASON_MOBILE)
+      return "DEAL_REASON_MOBILE";
+   if(value == DEAL_REASON_WEB)
+      return "DEAL_REASON_WEB";
+   if(value == DEAL_REASON_EXPERT)
+      return "DEAL_REASON_EXPERT";
+   if(value == DEAL_REASON_SL)
+      return "DEAL_REASON_SL";
+   if(value == DEAL_REASON_TP)
+      return "DEAL_REASON_TP";
+   if(value == DEAL_REASON_SO)
+      return "DEAL_REASON_SO";
+   if(value == DEAL_REASON_ROLLOVER)
+      return "DEAL_REASON_ROLLOVER";
+   if(value == DEAL_REASON_VMARGIN)
+      return "DEAL_REASON_VMARGIN";       
+   return "DEAL_REASON_SPLIT";                    
+}
+
+ulong HistoryDealGetTotalDay(){
+  HistorySelect(StringToTime(TimeToString(TimeTradeServer(), TIME_DATE) + " 00:01"), StringToTime(TimeToString(TimeTradeServer(), TIME_DATE) + " 23:59"));   
+  return HistoryDealsTotal();
+}
+
+ulong HistoryDealGetTotal(datetime start, datetime end){
+   HistorySelect(start, end);   
+   return HistoryDealsTotal();
+}
+
+
+string AllHistory(int size){
+   string str = "";
+   ulong ticket;
+   for(int i = 0; i < size; i++){
+      if(i != 0) str += ";";
+      ticket = HistoryDealGetTicket(i);
+      str += IntegerToString(HistoryDealGetInteger(ticket, DEAL_TICKET)) + ",";
+      str += IntegerToString(HistoryDealGetInteger(ticket, DEAL_ORDER)) + ",";
+      str += TimeToString(HistoryDealGetInteger(ticket, DEAL_TIME), TIME_DATE | TIME_MINUTES | TIME_SECONDS) + ",";
+      str += IntegerToString(HistoryDealGetInteger(ticket, DEAL_TIME_MSC)) + ",";
+      str += getENUM_DEAL_TYPE(HistoryDealGetInteger(ticket, DEAL_TYPE)) + ",";
+      str += getENUM_DEAL_ENTRY(HistoryDealGetInteger(ticket, DEAL_ENTRY)) + ",";
+      str += IntegerToString(HistoryDealGetInteger(ticket, DEAL_MAGIC)) + ",";
+      str += getENUM_DEAL_REASON(HistoryDealGetInteger(ticket, DEAL_REASON)) + ",";
+      str += IntegerToString(HistoryDealGetInteger(ticket, DEAL_POSITION_ID)) + ",";
+      str += DoubleToString(HistoryDealGetDouble(ticket, DEAL_VOLUME)) + ",";
+      str += DoubleToString(HistoryDealGetDouble(ticket, DEAL_PRICE)) + ",";
+      str += DoubleToString(HistoryDealGetDouble(ticket, DEAL_COMMISSION)) + ",";
+      str += DoubleToString(HistoryDealGetDouble(ticket, DEAL_SWAP)) + ",";
+      str += DoubleToString(HistoryDealGetDouble(ticket, DEAL_PROFIT)) + ",";
+      str += HistoryDealGetString(ticket, DEAL_SYMBOL) + ",";
+      str += HistoryDealGetString(ticket, DEAL_COMMENT) + ","; 
+   }
+   return str;
+}
+
+string HistoryDealAllDay(){
+   int size = (int)HistoryDealGetTotalDay();
+   return AllHistory(size);
+}
+
+string HistoryDealAll(datetime start, datetime end){
+   int size = (int)HistoryDealGetTotal(start, end);
+   return AllHistory(size);
+}
+

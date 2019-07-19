@@ -91,3 +91,131 @@ Exemplo:
 ```python
 mql5.SellStop("PETR4",  100, 27.50,  27.98, 27.01, "Qualquer comentario")
 ```
+
+####  [PositionsTotal](https://www.mql5.com/en/docs/trading/positionstotal)
+
+------------
+**Retorna o número de posições em aberto.**
+
+*Valor do tipo **int**.*
+
+PositionsTotal()
+ 
+
+Exemplo:
+```python
+mql5.PositionsTotal()
+```
+
+####  [PositionAll](https://www.mql5.com/pt/docs/constants/tradingconstants/positionproperties)
+
+------------
+**Retorna um array com todas as posições em aberto**
+
+
+PositionAll()
+ 
+
+Exemplo:
+```python
+mql5.PositionAll()
+```
+
+####  [OrdersTotal](https://www.mql5.com/pt/docs/trading/orderstotal)
+
+------------
+**Retorna o número de ordens.**
+
+*Valor do tipo **Double**.*
+
+OrdersTotal()
+ 
+
+Exemplo:
+```python
+mql5.OrdersTotal()
+```
+
+####  [OrderAll](https://www.mql5.com/pt/docs/constants/tradingconstants/orderproperties)
+
+------------
+**Retorna um array com todas as ordens pendentes**
+
+
+OrderAll()
+ 
+
+Exemplo:
+```python
+mql5.OrderAll()
+```
+
+####  [AccountInfoAll](https://www.mql5.com/pt/docs/constants/environment_state/accountinformation)
+
+------------
+**Para obter informações sobre a conta atual.**
+
+
+AccountInfoAll()
+ 
+
+Exemplo:
+```python
+mql5.AccountInfoAll()
+```
+
+####  [HistoryDealTotalDay](https://www.mql5.com/pt/docs/trading/historydealstotal)
+
+------------
+**Retorna o número de ordens e negócio no histórico do dia.**
+
+
+HistoryDealTotalDay()
+ 
+
+Exemplo:
+```python
+mql5.HistoryDealTotalDay()
+```
+
+####  [HistoryDealTotal](https://www.mql5.com/pt/docs/trading/historydealstotal)
+
+------------
+**Retorna o número de ordens e negócio no histórico para um período de tempo especificado.**
+
+
+HistoryDealTotal(Start_Time, Stop_Time)
+ 
+
+Exemplo:
+```python
+mql5.HistoryDealTotal("2019.07.16 10:25:10", "2019.07.18 12:00:00")
+```
+
+####  [HistoryDealAllDay](https://www.mql5.com/pt/docs/constants/tradingconstants/dealproperties)
+
+------------
+**Retorna um array com todas as ordens e negócio no histórico do dia**
+
+
+HistoryDealAllDay()
+ 
+
+Exemplo:
+```python
+mql5.HistoryDealAllDay()
+```
+
+####  [HistoryDealAll](https://www.mql5.com/pt/docs/constants/tradingconstants/dealproperties)
+
+------------
+**Retorna um array com todas as ordens e negócio no histórico para um período de tempo especificado.**
+
+
+HistoryDealAll(Start_Time, Stop_Time)
+ 
+
+Exemplo:
+```python
+mql5.HistoryDealAll("2019.07.16 10:25:10", "2019.07.18 12:00:00")
+```
