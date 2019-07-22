@@ -1,5 +1,5 @@
-from ConnectionMQL5 import ConnectionMQL5
-from Tools import MQL5Period 
+from .ConnectionMQL5 import ConnectionMQL5
+from .Tools import MQL5Period 
 
 class PyMQL5:
     def __init__(self):

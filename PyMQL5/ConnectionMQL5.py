@@ -1,5 +1,5 @@
-from ServerTCP import ServerTCP
-from Tools import MQL5parse
+from .ServerTCP import ServerTCP
+from .Tools import MQL5parse
 
 class ConnectionMQL5:
     def __init__(self):   

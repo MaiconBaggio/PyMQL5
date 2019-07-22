@@ -4,13 +4,16 @@
 
 ------------
 
-## Como usar
+## Instalar
 
+**Python3**:
+```python
+python setup.py install
+```
+**Metatrader5**:
+Execute o expert advisor API.ex5
 
-Execute no Metatrader5 o expert advisor API.ex5
-
-
-###  Exemplo
+###  Exemplo de uso
 ```python
 from PyMQL5 import PyMQL5
 mql5 = PyMQL5()
