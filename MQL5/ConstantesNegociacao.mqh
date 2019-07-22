@@ -369,6 +369,7 @@ string PositionAll(){
       str += DoubleToString(PositionGetDouble(POSITION_TP), _Digits_)+ ",";
       str += DoubleToString(PositionGetDouble(POSITION_PRICE_CURRENT), _Digits_) + ",";
       str += DoubleToString(PositionGetDouble(POSITION_PROFIT), _Digits_) + ",";
+      str += PositionGetString(POSITION_SYMBOL) + ",";
       str += PositionGetString(POSITION_COMMENT) + ",";
       str += PositionGetString(POSITION_EXTERNAL_ID);
    }

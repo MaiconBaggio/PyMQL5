@@ -31,8 +31,30 @@ string Parse(string str){
          
       if(result[command] == "historydealallday")   
          return HistoryDealAllDay();   
+         
+      if(result[command] == "cancelallorder")
+         return CancelAllOrder();   
+       
+      if(result[command] == "cancelallposition")
+         return CancelAllPosition();      
+         
+     
    }
    
+   if(sizeSplit == 2){
+      if(result[command] == "orderdelete")
+         return OrderDelete(StringToInteger(result[1]));
+         
+      if(result[command] == "positionclosesymbol")   
+         return PositionCloseSymbol(result[1]);
+         
+      if(result[command] == "positioncloseticket")
+         return PositionCloseTicket(StringToInteger(result[1]));   
+         
+      if(result[command] == "seteamagicnumber")
+         return SetEAMagicNumber(StringToInteger(result[1]));         
+          
+   }
    
    if(sizeSplit == 3){
       if(result[command] == "historydealtotal")
@@ -40,6 +62,9 @@ string Parse(string str){
       
       if(result[command] == "historydealall")
          return HistoryDealAll(StringToTime(result[1]), StringToTime(result[2]));
+      
+      if(result[command] == "positionclosepartial")
+         return PositionClosePartial(StringToInteger(result[1]), StringToDouble(result[2]));   
       
       if(result[command] == "ordergettimestup")
          return OrderGetTimeSetup(StringToInteger(result[1]));
@@ -66,9 +91,14 @@ string Parse(string str){
          return iVolumeToString(result[1], StringToTimeFrames(result[2]), (int)StringToInteger(result[3]));   
       
       if(result[command] == "copyticks")
-         return CopyTicksToString(result[1], StringToTime(result[2]), (int)StringToInteger(result[3]));
+         return CopyTicksToString(result[1], (ulong)StringToInteger(result[2]), (uint)StringToInteger(result[3]));
       if(result[command] == "copyticksrange")
-         return CopyTicksRangeToString(result[1], StringToTime(result[2]), StringToTime(result[3]));     
+         return CopyTicksRangeToString(result[1], (ulong)StringToInteger(result[2]), (ulong)StringToInteger(result[3]));     
+         
+      if(result[command] == "positionmodifysymbol")
+         return PositionModifySymbol(result[1], StringToDouble(result[2]), StringToDouble(result[3]));   
+      if(result[command] == "positionmodifyticket")
+         return PositionModifyTicket(StringToInteger(result[1]), StringToDouble(result[2]), StringToDouble(result[3]));      
    }   
    
    if(sizeSplit == 5){

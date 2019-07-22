@@ -56,3 +56,23 @@
 > Exemplo: "2019.07.11 13:01"
 
 **Tipo: String**
+
+
+------------
+#### SL
+------------
+*Stop Loss*
+
+> Exemplo: "27.00"
+
+**Tipo: Double**
+
+
+------------
+#### TP
+------------
+*Take Profit*
+
+> Exemplo: "27.50"
+
+**Tipo: Double**

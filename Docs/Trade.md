@@ -92,6 +92,131 @@ Exemplo:
 mql5.SellStop("PETR4",  100, 27.50,  27.98, 27.01, "Qualquer comentario")
 ```
 
+####  [OrderDelete](https://www.mql5.com/pt/docs/standardlibrary/tradeclasses/ctrade/ctradeorderdelete)
+
+------------
+**Exclui a ordem pendente.**
+
+*Retorna 1 - em caso de verificação bem sucedida das estruturas básicas, caso contrário - 0.*
+
+OrderDelete(Ticket)
+ 
+Exemplo:
+```python
+mql5.OrderDelete(125663)
+```
+
+####  [CancelAllOrder](https://www.mql5.com/pt/docs/standardlibrary/tradeclasses/ctrade/ctradeorderdelete)
+
+------------
+**Exclui todas as ordem pendente.**
+
+*Retorna 1 - em caso de verificação bem sucedida das estruturas básicas, caso contrário - 0.*
+
+CancelAllOrder()
+ 
+Exemplo:
+```python
+mql5.CancelAllOrder()
+```
+
+####  [PositionCloseSymbol](https://www.mql5.com/pt/docs/standardlibrary/tradeclasses/ctrade/ctradepositionclose)
+
+------------
+**Fecha a posição pelo símbolo deteminado**
+
+*Retorna 1 - em caso de verificação bem sucedida das estruturas básicas, caso contrário - 0.*
+
+PositionCloseSymbol(Symbol)
+ 
+Exemplo:
+```python
+mql5.PositionCloseSymbol("PETR4")
+```
+
+####  [PositionCloseTicket](https://www.mql5.com/pt/docs/standardlibrary/tradeclasses/ctrade/ctradepositionclose)
+
+------------
+**Fecha a posição com o bilhete(ticket) indicado.**
+
+*Retorna 1 - em caso de verificação bem sucedida das estruturas básicas, caso contrário - 0.*
+
+PositionCloseTicket(Ticket)
+ 
+Exemplo:
+```python
+mql5.PositionCloseTicket(125663)
+```
+####  [PositionClosePartial](https://www.mql5.com/pt/docs/standardlibrary/tradeclasses/ctrade/ctradepositionclosepartial)
+
+------------
+**Fecha parte da posição com o bilhete(ticket) indicado, ao estar ativa a contabilidade de cobertura.**
+
+*Retorna 1 - em caso de verificação bem sucedida das estruturas básicas, caso contrário - 0.*
+
+PositionClosePartial(Ticket, Volume)
+ 
+Exemplo:
+```python
+mql5.PositionClosePartial(125663, 100)
+```
+
+####  [PositionModifySymbol](https://www.mql5.com/pt/docs/standardlibrary/tradeclasses/ctrade/ctradepositionmodify)
+
+------------
+**Modifica os parâmetros de posição pelo símbolo determinado.**
+
+*Retorna 1 - em caso de verificação bem sucedida das estruturas básicas, caso contrário - 0.*
+
+PositionModifySymbol(Symbol, SL, TP)
+ 
+Exemplo:
+```python
+mql5.PositionModifySymbol("PETR4",  27.40, 27.90)
+```
+
+####  [PositionModifyTicket](https://www.mql5.com/pt/docs/standardlibrary/tradeclasses/ctrade/ctradepositionmodify)
+
+------------
+**Altera os parâmetros da posição segundo o bilhete(ticket) indicado.**
+
+*Retorna 1 - em caso de verificação bem sucedida das estruturas básicas, caso contrário - 0.*
+
+PositionModifyTicket(Ticket, SL, TP)
+
+Exemplo:
+```python
+mql5.PositionModifyTicket(125663,  27.40, 27.90)
+```
+
+####  [CancelAllPositon](https://www.mql5.com/pt/docs/standardlibrary/tradeclasses/ctrade/ctradepositionclose)
+
+------------
+**Fecha todas as posições abertas.**
+
+*Retorna 1 - em caso de verificação bem sucedida das estruturas básicas, caso contrário - 0.*
+
+CancelAllPositon()
+
+Exemplo:
+```python
+mql5.CancelAllPositon()
+```
+
+####  [SetEAMagicNumber](https://www.mql5.com/pt/docs/standardlibrary/tradeclasses/ctrade/ctradepositionclose)
+
+------------
+**Expert Advisor ID. Permite organizar um processamento analítico de ordens de negociação. Cada Expert Advisor pode definir seu próprio ID (identificador) único ao enviar uma solicitação de negociação.**
+
+*Retorna 1*
+
+SetEAMagicNumber(Number)
+
+Exemplo:
+```python
+mql5.SetEAMagicNumber(10000)
+```
+
 ####  [PositionsTotal](https://www.mql5.com/en/docs/trading/positionstotal)
 
 ------------
@@ -105,117 +230,4 @@ PositionsTotal()
 Exemplo:
 ```python
 mql5.PositionsTotal()
-```
-
-####  [PositionAll](https://www.mql5.com/pt/docs/constants/tradingconstants/positionproperties)
-
-------------
-**Retorna um array com todas as posições em aberto**
-
-
-PositionAll()
- 
-
-Exemplo:
-```python
-mql5.PositionAll()
-```
-
-####  [OrdersTotal](https://www.mql5.com/pt/docs/trading/orderstotal)
-
-------------
-**Retorna o número de ordens.**
-
-*Valor do tipo **Double**.*
-
-OrdersTotal()
- 
-
-Exemplo:
-```python
-mql5.OrdersTotal()
-```
-
-####  [OrderAll](https://www.mql5.com/pt/docs/constants/tradingconstants/orderproperties)
-
-------------
-**Retorna um array com todas as ordens pendentes**
-
-
-OrderAll()
- 
-
-Exemplo:
-```python
-mql5.OrderAll()
-```
-
-####  [AccountInfoAll](https://www.mql5.com/pt/docs/constants/environment_state/accountinformation)
-
-------------
-**Para obter informações sobre a conta atual.**
-
-
-AccountInfoAll()
- 
-
-Exemplo:
-```python
-mql5.AccountInfoAll()
-```
-
-####  [HistoryDealTotalDay](https://www.mql5.com/pt/docs/trading/historydealstotal)
-
-------------
-**Retorna o número de ordens e negócio no histórico do dia.**
-
-
-HistoryDealTotalDay()
- 
-
-Exemplo:
-```python
-mql5.HistoryDealTotalDay()
-```
-
-####  [HistoryDealTotal](https://www.mql5.com/pt/docs/trading/historydealstotal)
-
-------------
-**Retorna o número de ordens e negócio no histórico para um período de tempo especificado.**
-
-
-HistoryDealTotal(Start_Time, Stop_Time)
- 
-
-Exemplo:
-```python
-mql5.HistoryDealTotal("2019.07.16 10:25:10", "2019.07.18 12:00:00")
-```
-
-####  [HistoryDealAllDay](https://www.mql5.com/pt/docs/constants/tradingconstants/dealproperties)
-
-------------
-**Retorna um array com todas as ordens e negócio no histórico do dia**
-
-
-HistoryDealAllDay()
- 
-
-Exemplo:
-```python
-mql5.HistoryDealAllDay()
-```
-
-####  [HistoryDealAll](https://www.mql5.com/pt/docs/constants/tradingconstants/dealproperties)
-
-------------
-**Retorna um array com todas as ordens e negócio no histórico para um período de tempo especificado.**
-
-
-HistoryDealAll(Start_Time, Stop_Time)
- 
-
-Exemplo:
-```python
-mql5.HistoryDealAll("2019.07.16 10:25:10", "2019.07.18 12:00:00")
 ```

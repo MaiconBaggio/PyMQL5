@@ -43,3 +43,49 @@ string SellStop(string symbol, double volume, double price, double sl, double tp
    }
    return "-1";
 }
+
+string OrderDelete(ulong ticket){
+   return trade.OrderDelete(ticket) ? "1" : "0";   
+}
+
+
+string PositionCloseSymbol(string symbol){
+   return trade.PositionClose(symbol) ? "1" : "0";
+}
+
+string PositionCloseTicket(ulong ticket){
+   return trade.PositionClose(ticket) ? "1" : "0";
+}
+
+string PositionClosePartial(ulong ticket, double volume){
+   return trade.PositionClosePartial(ticket, volume) ? "1" : "0";
+}
+
+string PositionModifySymbol(string symbol, double sl, double tp){
+   return trade.PositionModify(symbol, sl, tp) ? "1" : "0";
+}
+
+string PositionModifyTicket(ulong ticket, double sl, double tp){
+   return trade.PositionModify(ticket, sl, tp) ? "1" : "0" ; 
+}
+
+string SetEAMagicNumber(ulong number){
+   trade.SetExpertMagicNumber(number);
+   return "1";
+}
+
+string CancelAllPosition(){
+   string str = "1";
+   while(PositionsTotal() > 0)
+      if(!trade.PositionClose(PositionGetSymbol(0)))
+         str = "0"; 
+   return str;
+}
+
+string CancelAllOrder(){
+   string str = "1";
+   while(OrdersTotal() > 0)
+      if(!trade.OrderDelete(OrderGetTicket(0)))
+         str = "0";
+   return str;     
+}
