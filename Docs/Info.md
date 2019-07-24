@@ -14,6 +14,31 @@ Exemplo:
 mql5.AccountInfoAll()
 ```
 
+####  [SymbolInfoAll](https://www.mql5.com/pt/docs/constants/environment_state/marketinfoconstants)
+
+------------
+**Para obter as informações atuais do mercado com um dictionary do [tipo PropertiesSymbol](#SymbolInfoAll "tipo SymbolInfoAll") .**
+
+SymbolInfoAll(Symbol)
+
+Exemplo:
+```python
+mql5.SymbolInfoAll("PETR4")
+```
+
+####  [OptionInfo](https://www.mql5.com/pt/docs/constants/environment_state/marketinfoconstants)
+
+------------
+**Para obter as informações atuais sobre uma opção com um dictionary do [tipo PropertiesOptionInfo](#PropertiesOptionInfo "tipo PropertiesOptionInfo") .**
+
+OptionInfo(Symbol)
+
+Exemplo:
+```python
+mql5.OptionInfo("PETRH285")
+```
+
+
 ####  [PropertiesAccount](https://www.mql5.com/pt/docs/constants/environment_state/accountinformation)
 ------------
 *O Tipo PropertiesAccount é um dictionary que tem o seguinte modelo (Propriedades da Conta):*
@@ -50,3 +75,32 @@ mql5.AccountInfoAll()
 [ENUM_ACCOUNT_TRADE_MODE](https://www.mql5.com/pt/docs/constants/environment_state/accountinformation#enum_account_trade_mode "ENUM_ACCOUNT_TRADE_MODE")
 [ENUM_ACCOUNT_STOPOUT_MODE](https://www.mql5.com/pt/docs/constants/environment_state/accountinformation#enum_account_stopout_mode "ENUM_ACCOUNT_STOPOUT_MODE")
 [ENUM_ACCOUNT_MARGIN_MODE](https://www.mql5.com/pt/docs/constants/environment_state/accountinformation#enum_account_margin_mode "ENUM_ACCOUNT_MARGIN_MODE")
+
+
+####  [PropertiesSymbol](https://www.mql5.com/pt/docs/constants/environment_state/accountinformation)
+------------
+*O Tipo PropertiesSymbol é um dictionary que tem o seguinte modelo (Propriedades do Ativo):*
+```python
+{
+
+}
+```
+
+####  [PropertiesOptionInfo](https://www.mql5.com/pt/docs/constants/environment_state/accountinformation)
+------------
+*O Tipo PropertiesOptionInfo é um dictionary que tem o seguinte modelo (Propriedades da Opção):*
+```python
+{
+	'OPTION_MODE': ENUM_SYMBOL_OPTION_MODE,
+	'OPTION_RIGHT': ENUM_SYMBOL_OPTION_RIGHT,
+	'START_TIME': date,
+	'EXPIRATION_TIME': date,
+	'OPTION_STRIKE': float,
+	'BID': float,
+	'ASK': float,
+	'LAST': float,
+	'VOLUME_REAL': float
+}
+```
+[ENUM_SYMBOL_OPTION_MODE](https://www.mql5.com/pt/docs/constants/environment_state/marketinfoconstants#enum_symbol_option_mode "ENUM_SYMBOL_OPTION_MODE")
+[ENUM_SYMBOL_OPTION_RIGHT](https://www.mql5.com/pt/docs/constants/environment_state/marketinfoconstants#enum_symbol_option_right "ENUM_SYMBOL_OPTION_RIGHT")

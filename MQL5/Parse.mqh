@@ -1,6 +1,7 @@
 #include "TimeSeries.mqh"
 #include "Trade.mqh"
 #include "ConstantesNegociacao.mqh"
+#include "Info.mqh"
 
 #define command 0
 
@@ -52,7 +53,13 @@ string Parse(string str){
          return PositionCloseTicket(StringToInteger(result[1]));   
          
       if(result[command] == "seteamagicnumber")
-         return SetEAMagicNumber(StringToInteger(result[1]));         
+         return SetEAMagicNumber(StringToInteger(result[1]));
+      
+      if(result[command] == "symbolinfoall")
+         return SymbolInfoAll(result[1]);            
+      
+      if(result[command] == "optioninfo")
+         return OptionInfo(result[1]);   
           
    }
    

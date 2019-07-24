@@ -71,4 +71,5 @@ else:
 	- [HistoryDealAllDay](Docs/ConstantesNegociacao.md#HistoryDealAllDay) - Retorna um array com todas as transações do dia atual,  com as suas propriedades respectivamente.
 	- [HistoryDealAll](Docs/ConstantesNegociacao.md#HistoryDealAll)- Retorna um array com todas as transações de um range com data e horário especificado,  com as suas propriedades respectivamente.
 - [**Informações**](Docs/Info.md)
-	- [AccountInfoAll](Docs/Info.md#AccountInfoAll)  - Retorna um array com informações de conta.
+	- [AccountInfoAll](Docs/Info.md#AccountInfoAll)  - Retorna um dictionary com informações de conta.
+	- [OptionInfo](Docs/Info.md#OptionInfo)  - Retorna um dictionary com informações de uma opção.

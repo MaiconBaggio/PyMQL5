@@ -220,5 +220,5 @@ string iTimeToString(string symbol, ENUM_TIMEFRAMES timeframe, int shift){
 }
 
 string iVolumeToString(string symbol, ENUM_TIMEFRAMES timeframe, int shift){
-   return IntegerToString(iVolume(symbol, timeframe, shift)); 
+   return IntegerToString(iRealVolume(symbol, timeframe, shift)); 
 }
