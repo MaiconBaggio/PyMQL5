@@ -44,13 +44,13 @@ mql5.OptionInfo("PETRH285")
 *O Tipo PropertiesAccount é um dictionary que tem o seguinte modelo (Propriedades da Conta):*
 ```python
 {
-	'LOGIN': int, # Número da conta
-	'TRADE_MODE': ENUM_ACCOUNT_TRADE_MODE, # Modo de negociação da conta
-	'LEVERAGE': , # Alavancagem da conta
-	'LIMIT_ORDERS': int, # Número permitido máximo de ordens pendentes ativas
-	'MARGIN_SO_MODE': ENUM_ACCOUNT_STOPOUT_MODE, # Modo para definir a margem permitida mínima
-	'TRADE_ALLOWED':  int, #  Negociação permitida para a conta atual
-	'TRADE_EXPERT':  int, # Negociação permitida para um Expert Advisor
+    'LOGIN': int, # Número da conta
+    'TRADE_MODE': ENUM_ACCOUNT_TRADE_MODE, # Modo de negociação da conta
+    'LEVERAGE': , # Alavancagem da conta
+    'LIMIT_ORDERS': int, # Número permitido máximo de ordens pendentes ativas
+    'MARGIN_SO_MODE': ENUM_ACCOUNT_STOPOUT_MODE, # Modo para definir a margem permitida mínima
+    'TRADE_ALLOWED':  int, #  Negociação permitida para a conta atual
+    'TRADE_EXPERT':  int, # Negociação permitida para um Expert Advisor
     'MARGIN_MODE': ENUM_ACCOUNT_MARGIN_MODE, # Modo de cálculo da margem
     'CURRENCY_DIGITS':  int, # Número de casas decimais, para a moeda da conta.
     'BALANCE': float, # Saldo da conta na moeda de depósito
@@ -91,15 +91,15 @@ mql5.OptionInfo("PETRH285")
 *O Tipo PropertiesOptionInfo é um dictionary que tem o seguinte modelo (Propriedades da Opção):*
 ```python
 {
-	'OPTION_MODE': ENUM_SYMBOL_OPTION_MODE,
-	'OPTION_RIGHT': ENUM_SYMBOL_OPTION_RIGHT,
-	'START_TIME': date,
-	'EXPIRATION_TIME': date,
-	'OPTION_STRIKE': float,
-	'BID': float,
-	'ASK': float,
-	'LAST': float,
-	'VOLUME_REAL': float
+    'OPTION_MODE': ENUM_SYMBOL_OPTION_MODE,
+    'OPTION_RIGHT': ENUM_SYMBOL_OPTION_RIGHT,
+    'START_TIME': date,
+    'EXPIRATION_TIME': date,
+    'OPTION_STRIKE': float,
+    'BID': float,
+    'ASK': float,
+    'LAST': float,
+    'VOLUME_REAL': float
 }
 ```
 [ENUM_SYMBOL_OPTION_MODE](https://www.mql5.com/pt/docs/constants/environment_state/marketinfoconstants#enum_symbol_option_mode "ENUM_SYMBOL_OPTION_MODE")
