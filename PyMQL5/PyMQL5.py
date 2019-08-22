@@ -1,283 +1,292 @@
-from .ConnectionMQL5 import ConnectionMQL5
-from .Tools import MQL5Period
+import socket
+from .Tools import MQL5Period, MQL5parse
 from datetime import datetime 
 
 class PyMQL5:
     def __init__(self):
-        self.pymql5 = ConnectionMQL5()
-        self.pymql5.startConnection()
-        
-    def CheckConnection(self):
-        return self.pymql5.Status    
+        try:
+            self.client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        except:
+            print("Error socket client UDP!")
+        self.HOST = "127.0.0.1"
+        self.PORT = 1235
+
+    def MQL5(self, text):        
+        try:
+            self.client.sendto(text.encode(), (self.HOST, self.PORT))
+            recv, _ = self.client.recvfrom(1024000)
+            return MQL5parse(recv.decode("utf-8"))
+        except:
+            return None
 
     def iOpen(self, Symbol, Period, Shift):
-        result = self.pymql5.MQL5("iopen,"+ str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Shift))
+        result = self.MQL5("iopen,"+ str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Shift))
         if result == None: return result
         return float(result)
 
     def iHigh(self, Symbol, Period, Shift):
-        result = self.pymql5.MQL5("ihigh,"+ str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Shift))
+        result = self.MQL5("ihigh,"+ str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Shift))
         if result == None: return result
         return float(result)
 
     def iLow(self, Symbol, Period, Shift):
-        result = self.pymql5.MQL5("ilow,"+ str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Shift))
+        result = self.MQL5("ilow,"+ str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Shift))
         if result == None: return result
         return float(result)
     
     def iClose(self, Symbol, Period, Shift):
-        result = self.pymql5.MQL5("iclose,"+ str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Shift))
+        result = self.MQL5("iclose,"+ str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Shift))
         if result == None: return result
         return float(result)
 
     def iTime(self, Symbol, Period, Shift):
-        result = self.pymql5.MQL5("itime,"+ str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Shift))
+        result = self.MQL5("itime,"+ str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Shift))
         if result == None: return result
         return datetime.strptime(result, "%Y.%m.%d %H:%M")
 
     def iVolume(self, Symbol, Period, Shift):
-        result = self.pymql5.MQL5("ivolume,"+ str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Shift))    
+        result = self.MQL5("ivolume,"+ str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Shift))    
         if result == None: return result
         return int(result)
 
     # Copys 
     def CopyRates(self, Symbol, Period, Start_Pos, Count):
-        result = self.pymql5.MQL5("copyrates," + str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Start_Pos) + "," + str(Count))
+        result = self.MQL5("copyrates," + str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Start_Pos) + "," + str(Count))
         if result == None: return result
         return [dictMQLRates(i) for i in result]
 
     def CopyRatesTC(self, Symbol, Period, Start_Time, Count):
-        result = self.pymql5.MQL5("copyratesTC," + str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Start_Time) + "," + str(Count))
+        result = self.MQL5("copyratesTC," + str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Start_Time) + "," + str(Count))
         if result == None: return result
         return [dictMQLRates(i) for i in result]
 
     def CopyRatesTT(self, Symbol, Period, Start_Time, Stop_Time):
-        result = self.pymql5.MQL5("copyratesTT," + str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Start_Time) + "," + str(Stop_Time))
+        result = self.MQL5("copyratesTT," + str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Start_Time) + "," + str(Stop_Time))
         if result == None: return result
         return [dictMQLRates(i) for i in result]
 
      #open
     def CopyOpen(self, Symbol, Period, Start_Pos, Count):
-        result = self.pymql5.MQL5("copyopen," + str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Start_Pos) + "," + str(Count))[0]
+        result = self.MQL5("copyopen," + str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Start_Pos) + "," + str(Count))[0]
         if result == None: return result
         return [float(i) for i in result]        
     
     def CopyOpenTC(self, Symbol, Period, Start_Time, Count):
-        result = self.pymql5.MQL5("copyopenTC," + str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Start_Time) + "," + str(Count))[0]
+        result = self.MQL5("copyopenTC," + str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Start_Time) + "," + str(Count))[0]
         if result == None: return result
         return [float(i) for i in result]        
 
     def CopyOpenTT(self, Symbol, Period, Start_Time, Stop_Time):
-        result = self.pymql5.MQL5("copyopenTT," + str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Start_Time) + "," + str(Stop_Time))[0]
+        result = self.MQL5("copyopenTT," + str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Start_Time) + "," + str(Stop_Time))[0]
         if result == None: return result
         return [float(i) for i in result]
 
     #high
     def CopyHigh(self, Symbol, Period, Start_Pos, Count):
-        result = self.pymql5.MQL5("copyhigh," + str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Start_Pos) + "," + str(Count))[0]
+        result = self.MQL5("copyhigh," + str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Start_Pos) + "," + str(Count))[0]
         if result == None: return result
         return [float(i) for i in result]
     
     def CopyHighTC(self, Symbol, Period, Start_Time, Count):
-        result =  self.pymql5.MQL5("copyhighTC," + str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Start_Time) + "," + str(Count))[0]        
+        result =  self.MQL5("copyhighTC," + str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Start_Time) + "," + str(Count))[0]        
         if result == None: return result
         return [float(i) for i in result]
 
     def CopyHighTT(self, Symbol, Period, Start_Time, Stop_Time):
-        result =  self.pymql5.MQL5("copyhighTT," + str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Start_Time) + "," + str(Stop_Time))[0]
+        result =  self.MQL5("copyhighTT," + str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Start_Time) + "," + str(Stop_Time))[0]
         if result == None: return result
         return [float(i) for i in result]
 
     #low
     def CopyLow(self, Symbol, Period, Start_Pos, Count):
-        result = self.pymql5.MQL5("copylow," + str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Start_Pos) + "," + str(Count))[0]        
+        result = self.MQL5("copylow," + str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Start_Pos) + "," + str(Count))[0]        
         if result == None: return result
         return [float(i) for i in result]
     
     def CopyLowTC(self, Symbol, Period, Start_Time, Count):
-        result = self.pymql5.MQL5("copylowTC," + str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Start_Time) + "," + str(Count))[0]        
+        result = self.MQL5("copylowTC," + str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Start_Time) + "," + str(Count))[0]        
         if result == None: return result
         return [float(i) for i in result]
 
     def CopyLowTT(self, Symbol, Period, Start_Time, Stop_Time):
-        result = self.pymql5.MQL5("copylowTT," + str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Start_Time) + "," + str(Stop_Time))[0]
+        result = self.MQL5("copylowTT," + str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Start_Time) + "," + str(Stop_Time))[0]
         if result == None: return result
         return [float(i) for i in result]
 
     #close
     def CopyClose(self, Symbol, Period, Start_Pos, Count):
-        result = self.pymql5.MQL5("copyclose," + str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Start_Pos) + "," + str(Count))[0]        
+        result = self.MQL5("copyclose," + str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Start_Pos) + "," + str(Count))[0]        
         if result == None: return result
         return [float(i) for i in result]
     
     def CopyCloseTC(self, Symbol, Period, Start_Time, Count):
-        result = self.pymql5.MQL5("copycloseTC," + str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Start_Time) + "," + str(Count))[0]        
+        result = self.MQL5("copycloseTC," + str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Start_Time) + "," + str(Count))[0]        
         if result == None: return result
         return [float(i) for i in result]
 
     def CopyCloseTT(self, Symbol, Period, Start_Time, Stop_Time):
-        result = self.pymql5.MQL5("copycloseTT," + str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Start_Time) + "," + str(Stop_Time))[0]
+        result = self.MQL5("copycloseTT," + str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Start_Time) + "," + str(Stop_Time))[0]
         if result == None: return result
         return [float(i) for i in result]
 
     #volume
     def CopyVolume(self, Symbol, Period, Start_Pos, Count):
-        result = self.pymql5.MQL5("copyvolume," + str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Start_Pos) + "," + str(Count))[0]        
+        result = self.MQL5("copyvolume," + str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Start_Pos) + "," + str(Count))[0]        
         if result == None: return result
         return [int(i) for i in result]
     
     def CopyVolumeTC(self, Symbol, Period, Start_Time, Count):
-        result = self.pymql5.MQL5("copyvolumeTC," + str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Start_Time) + "," + str(Count))[0]        
+        result = self.MQL5("copyvolumeTC," + str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Start_Time) + "," + str(Count))[0]        
         if result == None: return result
         return [int(i) for i in result]
 
     def CopyVolumeTT(self, Symbol, Period, Start_Time, Stop_Time):
-        result = self.pymql5.MQL5("copyvolumeTT," + str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Start_Time) + "," + str(Stop_Time))[0]
+        result = self.MQL5("copyvolumeTT," + str(Symbol).upper() + "," + MQL5Period(Period) + "," + str(Start_Time) + "," + str(Stop_Time))[0]
         if result == None: return result
         return [int(i) for i in result]
 
     #copyticks
     def CopyTicks(self, Symbol, Start_Time_MSC, Count):
-        result = self.pymql5.MQL5("copyticks," + str(Symbol).upper() + "," + str(Start_Time_MSC) + "," + str(Count))
+        result = self.MQL5("copyticks," + str(Symbol).upper() + "," + str(Start_Time_MSC) + "," + str(Count))
         if result == None: return result
         return [dictMQLTick(i) for i in result]        
 
     def CopyTicksRange(self, Symbol, Start_Time_MSC, Stop_Time_MSC):
-        result = self.pymql5.MQL5("copyticksrange," + str(Symbol).upper() + "," + str(Start_Time_MSC) + "," + str(Stop_Time_MSC))
+        result = self.MQL5("copyticksrange," + str(Symbol).upper() + "," + str(Start_Time_MSC) + "," + str(Stop_Time_MSC))
         if result == None: return result
         return [dictMQLTick(i) for i in result]
 
     # Orders
     def Buy(self, Symbol, Volume, Price, SL, TP, Comment):
-        result = self.pymql5.MQL5("buy," + str(Symbol).upper() + "," + str(Volume) + "," + str(Price) + "," + str(SL) + "," + str(TP) + "," + str(Comment))
+        result = self.MQL5("buy," + str(Symbol).upper() + "," + str(Volume) + "," + str(Price) + "," + str(SL) + "," + str(TP) + "," + str(Comment))
         if result == None: return result
         return int(result)
     
     def Sell(self, Symbol, Volume, Price, SL, TP, Comment):
-        result = self.pymql5.MQL5("sell," + str(Symbol).upper() + "," + str(Volume) + "," + str(Price) + "," + str(SL) + "," + str(TP) + "," + str(Comment))
+        result = self.MQL5("sell," + str(Symbol).upper() + "," + str(Volume) + "," + str(Price) + "," + str(SL) + "," + str(TP) + "," + str(Comment))
         if result == None: return result
         return int(result)
     
     def BuyLimit(self, Symbol, Volume, Price, SL, TP, Comment):
-        result = self.pymql5.MQL5("buylimit," + str(Symbol).upper() + "," + str(Volume) + "," + str(Price) + "," + str(SL) + "," + str(TP) + "," + str(Comment))
+        result = self.MQL5("buylimit," + str(Symbol).upper() + "," + str(Volume) + "," + str(Price) + "," + str(SL) + "," + str(TP) + "," + str(Comment))
         if result == None: return result
         return int(result)
 
     def SellLimit(self, Symbol, Volume, Price, SL, TP, Comment):
-        result = self.pymql5.MQL5("selllimit," + str(Symbol).upper() + "," + str(Volume) + "," + str(Price) + "," + str(SL) + "," + str(TP) + "," + str(Comment))
+        result = self.MQL5("selllimit," + str(Symbol).upper() + "," + str(Volume) + "," + str(Price) + "," + str(SL) + "," + str(TP) + "," + str(Comment))
         if result == None: return result
         return int(result)
 
     def BuyStop(self, Symbol, Volume, Price, SL, TP, Comment):
-        result = self.pymql5.MQL5("buystop," + str(Symbol).upper() + "," + str(Volume) + "," + str(Price) + "," + str(SL) + "," + str(TP) + "," + str(Comment))
+        result = self.MQL5("buystop," + str(Symbol).upper() + "," + str(Volume) + "," + str(Price) + "," + str(SL) + "," + str(TP) + "," + str(Comment))
         if result == None: return result
         return int(result)
 
     def SellStop(self, Symbol, Volume, Price, SL, TP, Comment):
-        result = self.pymql5.MQL5("sellstop," + str(Symbol).upper() + "," + str(Volume) + "," + str(Price) + "," + str(SL) + "," + str(TP) + "," + str(Comment))    
+        result = self.MQL5("sellstop," + str(Symbol).upper() + "," + str(Volume) + "," + str(Price) + "," + str(SL) + "," + str(TP) + "," + str(Comment))    
         if result == None: return result
         return int(result)
 
     # Positons
     def PositionsTotal(self):
-        result = self.pymql5.MQL5("positionstotal")
+        result = self.MQL5("positionstotal")
         if result == None: return result
         return int(result)
 
     def PositionAll(self):
-        result = self.pymql5.MQL5("positionall")
+        result = self.MQL5("positionall")
         if result == None: return result
         return [dictPOSITION(i) for i in result]
 
     # Orders
     def OrdersTotal(self):
-        result = self.pymql5.MQL5("orderstotal")    
+        result = self.MQL5("orderstotal")    
         if result == None: return result
         return int(result)
 
     def OrderAll(self):
-        result = self.pymql5.MQL5("orderall")
+        result = self.MQL5("orderall")
         return [dictORDER(i) for i in result]
 
     # AccountInfo
     def AccountInfoAll(self):
-        result = self.pymql5.MQL5("accountinfoall")
+        result = self.MQL5("accountinfoall")
         if result == None: return result
         return [dictACCOUNT(i) for i in result]
 
     # HistoryDeal
     def HistoryDealTotalDay(self):
-        result = self.pymql5.MQL5("historydealtotalday")
+        result = self.MQL5("historydealtotalday")
         if result == None: return result
         return int(result)
 
     def HistoryDealTotal(self, Start_Time, Stop_Time):
-        result = self.pymql5.MQL5("historydealtotal," + str(Start_Time) + "," + str(Stop_Time))
+        result = self.MQL5("historydealtotal," + str(Start_Time) + "," + str(Stop_Time))
         if result == None: return result
         return int(result)
 
     def HistoryDealAllDay(self):
-        result = self.pymql5.MQL5("historydealallday")
+        result = self.MQL5("historydealallday")
         if result == None: return result
         return [dictDEAL(i) for i in result]
 
     def HistoryDealAll(self, Start_Time, Stop_Time):      
-        result = self.pymql5.MQL5("historydealall," + str(Start_Time) + "," + str(Stop_Time))
+        result = self.MQL5("historydealall," + str(Start_Time) + "," + str(Stop_Time))
         if result == None: return result
         return [dictDEAL(i) for i in result]       
 
     def CancelAllOrder(self):
-        result = self.pymql5.MQL5("cancelallorder")
+        result = self.MQL5("cancelallorder")
         if result == None: return result
         return int(result)
 
     def OrderDelete(self, Ticket):
-        result = self.pymql5.MQL5("orderdelete," + str(Ticket))
+        result = self.MQL5("orderdelete," + str(Ticket))
         if result == None: return result
         return int(result)
 
     def PositionCloseSymbol(self, Symbol):
-        result = self.pymql5.MQL5("positionclosesymbol," + str(Symbol).upper())
+        result = self.MQL5("positionclosesymbol," + str(Symbol).upper())
         if result == None: return result
         return int(result)
 
     def PositionCloseTicket(self, Ticket):
-        result = self.pymql5.MQL5("positioncloseticket," + str(Ticket))
+        result = self.MQL5("positioncloseticket," + str(Ticket))
         if result == None: return result
         return int(result)
 
     def PositionClosePartial(self, Ticket, Volume):
-        result = self.pymql5.MQL5("positionclosepartial," + str(Ticket) + "," + str(Volume))
+        result = self.MQL5("positionclosepartial," + str(Ticket) + "," + str(Volume))
         if result == None: return result
         return int(result)
 
     def PositionModifySymbol(self, Symbol, SL, TP):
-        result = self.pymql5.MQL5("positionmodifysymbol," + str(Symbol).upper() + "," + str(SL) + "," + str(TP))
+        result = self.MQL5("positionmodifysymbol," + str(Symbol).upper() + "," + str(SL) + "," + str(TP))
         if result == None: return result
         return int(result)
 
     def PositionModifyTicket(self, Ticket, SL, TP):
-        result = self.pymql5.MQL5("positionmodifyticket," + str(Ticket) + "," + str(SL) + "," + str(TP))
+        result = self.MQL5("positionmodifyticket," + str(Ticket) + "," + str(SL) + "," + str(TP))
         if result == None: return result
         return int(result)
 
     def CancelAllPosition(self):
-        result = self.pymql5.MQL5("cancelallposition")
+        result = self.MQL5("cancelallposition")
         if result == None: return result
         return int(result)
 
     def SetEAMagicNumber(self, Number):
-        result = self.pymql5.MQL5("seteamagicnumber," + str(Number))
+        result = self.MQL5("seteamagicnumber," + str(Number))
         if result == None: return result
         return int(result)
 
     def SymbolInfoAll(self, Symbol):
-        result = self.pymql5.MQL5("symbolinfoall," + str(Symbol).upper())[0]
+        result = self.MQL5("symbolinfoall," + str(Symbol).upper())[0]
         if result == None: return result
         return result
 
     def OptionInfo(self, Symbol):
-        result = self.pymql5.MQL5("optioninfo," + str(Symbol).upper())[0]    
+        result = self.MQL5("optioninfo," + str(Symbol).upper())[0]    
         if result != None:
             return { 'OPTION_MODE': result[0],
                 'OPTION_RIGHT': result[1],
