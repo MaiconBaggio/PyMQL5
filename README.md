@@ -1,6 +1,6 @@
 # PyMQL5
 
- O PyMQL5 é uma API que realiza a conexão entre Python3 e o Metatrader5 através de socket TCP.
+ O PyMQL5 é uma API que realiza a conexão entre Python3 e o Metatrader5 através de socket UDP.
 
 ------------
 
