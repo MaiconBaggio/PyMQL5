@@ -14,6 +14,7 @@ class PyMQL5:
     def MQL5(self, text):        
         try:
             self.client.sendto(text.encode(), (self.HOST, self.PORT))
+            self.client.settimeout(1)
             recv, _ = self.client.recvfrom(1024000)
             return MQL5parse(recv.decode("utf-8"))
         except:
