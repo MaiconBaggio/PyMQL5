@@ -8,6 +8,10 @@
 
 **Python3**:
 ```python
+pip install PyMQL5
+```
+ou
+```python
 python setup.py install
 ```
 **Metatrader5**:
