@@ -1,6 +1,15 @@
 import socket
 from .Tools import MQL5Period, MQL5parse
 from datetime import datetime 
+import logging
+from pathlib import Path
+
+fileLog = Path.home() / "Documents" / "PyMQL5.log"
+
+logging.basicConfig(filename= fileLog, format='%(asctime)s| %(message)s') 
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
+logger.info("Start")
 
 class PyMQL5:
     def __init__(self):
@@ -8,8 +17,9 @@ class PyMQL5:
             self.client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             self.HOST = "127.0.0.1"
             self.PORT = 1235
+            logger.info("Socket UDP HOST=" + str(self.HOST) + " PORT=" + str(self.PORT))
         except:
-            print("Error socket client UDP!")
+            logger.exception("Erro ao se conectcar com o socket client UDP!")
 
     def MQL5(self, text):        
         try:
@@ -18,176 +28,155 @@ class PyMQL5:
             recv, _ = self.client.recvfrom(1024000)
             return MQL5parse(recv.decode("utf-8"))
         except:
+            logger.exception("Erro de comunicação (def MQL5 " + str(text) + ")")
             return None
 
+
+    def TimeSeriresI(self, _type, symbol, period, shift, formate):
+        try:
+            dado = self.MQL5(str(_type) + "," + str(symbol).upper() + "," + MQL5Period(period) + "," + str(shift))
+            if formate == "float":
+                return float(dado)
+            if formate == "date":
+                return datetime.strptime(dado, "%Y.%m.%d %H:%M")
+            return None
+        except:
+            logger.exception(str(_type) + str(symbol).upper() + "," + MQL5Period(period)  + "," + str(shift))
+            return None
+    
+    def TimeSeriresCopy(self, _type, symbol, period, start_Pos, count, start_time, stop_time, formate):
+        try:
+            if start_time == None and stop_time == None:
+                result = self.MQL5(str(_type) + "," + str(symbol).upper() + "," + MQL5Period(period) + "," + str(start_Pos) + "," + str(count))
+            elif start_Pos == None and stop_time == None:
+                result = self.MQL5(str(_type) + "," + str(symbol).upper() + "," + MQL5Period(period) + "," + str(start_time) + "," + str(count))
+            elif start_Pos == None and count == None:
+                result = self.MQL5(str(_type) + "," + str(symbol).upper() + "," + MQL5Period(period) + "," + str(start_time) + "," + str(stop_time))
+
+            if formate == "dictMQLRates":
+                return [dictMQLRates(i) for i in result]
+            if formate == "float":
+                result = result[0]
+                return [float(i) for i in result]
+            return None
+        except:
+            logger.exception(str(_type) + str(symbol).upper() + "," + MQL5Period(period) + "," + str(start_Pos) + "," + str(count) + "," + str(start_time) + "," + str(stop_time))
+            return None
+
+    def SendTrade(self, _type, symbol, volume, price, sl, tp, comment):
+        try:
+            logger.info("Trade " + str(_type) + "," + str(symbol).upper() + "," + str(volume) + "," + str(price) + "," + str(sl) + "," + str(tp) + "," + str(comment))
+            return int(self.MQL5(str(_type) + "," + str(symbol).upper() + "," + str(volume) + "," + str(price) + "," + str(sl) + "," + str(tp) + "," + str(comment)))
+        except:
+            logger.exception("Trade " + str(_type) + "," + str(symbol).upper() + "," + str(volume) + "," + str(price) + "," + str(sl) + "," + str(tp) + "," + str(comment))
+            return None
+    
     def iOpen(self, symbol, period, shift):
-        try: return float(self.MQL5("iopen,"+ str(symbol).upper() + "," + MQL5Period(period) + "," + str(shift)))
-        except: return None        
+        return self.TimeSeriresI("iopen", symbol, period, shift, "float")
 
     def iHigh(self, symbol, period, shift):
-        try: return float(self.MQL5("ihigh,"+ str(symbol).upper() + "," + MQL5Period(period) + "," + str(shift)))
-        except: return None
+        return self.TimeSeriresI("ihigh", symbol, period, shift, "float")
         
     def iLow(self, symbol, period, shift):
-        try: return float(self.MQL5("ilow,"+ str(symbol).upper() + "," + MQL5Period(period) + "," + str(shift)))       
-        except: return None
+        return self.TimeSeriresI("ilow", symbol, period, shift, "float")
  
     def iClose(self, symbol, period, shift):
-        try: return float(self.MQL5("iclose,"+ str(symbol).upper() + "," + MQL5Period(period) + "," + str(shift)))
-        except: return None
+        return self.TimeSeriresI("iclose", symbol, period, shift, "float")
         
     def iTime(self, symbol, period, shift):
-        try: return datetime.strptime(self.MQL5("itime,"+ str(symbol).upper() + "," + MQL5Period(period) + "," + str(shift)), "%Y.%m.%d %H:%M")
-        except: return None
+        return self.TimeSeriresI("iclose", symbol, period, shift, "date")
         
     def iVolume(self, symbol, period, shift):
-        try: return int(self.MQL5("ivolume,"+ str(symbol).upper() + "," + MQL5Period(period) + "," + str(shift)))
-        except: return None
+        return self.TimeSeriresI("ivolume", symbol, period, shift, "float")
         
     def CopyRates(self, symbol, period, start_Pos, count):
-        try:
-            result = self.MQL5("copyrates," + str(symbol).upper() + "," + MQL5Period(period) + "," + str(start_Pos) + "," + str(count))
-            return [dictMQLRates(i) for i in result]
-        except: return None
+        return self.TimeSeriresCopy("copyrates", symbol, period, start_Pos, count, None, None, "dictMQLRates")
 
     def CopyRatesTC(self, symbol, period, start_time, count):
-        try: 
-            result = self.MQL5("copyratesTC," + str(symbol).upper() + "," + MQL5Period(period) + "," + str(start_time) + "," + str(count))
-            return [dictMQLRates(i) for i in result]
-        except: return None
+        return self.TimeSeriresCopy("copyratesTC", symbol, period, None, count, start_time, None, "dictMQLRates")
         
     def CopyRatesTT(self, symbol, period, start_time, stop_time):
-        try:
-            result = self.MQL5("copyratesTT," + str(symbol).upper() + "," + MQL5Period(period) + "," + str(start_time) + "," + str(stop_time))
-            return [dictMQLRates(i) for i in result]
-        except: return None
+        return self.TimeSeriresCopy("copyratesTT", symbol, period, None, None, start_time, stop_time, "dictMQLRates")
 
-    def CopyOpen(self, symbol, period, start_pos, count):
-        try:
-            result = self.MQL5("copyopen," + str(symbol).upper() + "," + MQL5Period(period) + "," + str(start_pos) + "," + str(count))[0]
-            return [float(i) for i in result]        
-        except: return None
+    def CopyOpen(self, symbol, period, start_Pos, count):
+        return self.TimeSeriresCopy("copyopen", symbol, period, start_Pos, count, None, None, "float")
 
     def CopyOpenTC(self, symbol, period, start_time, count):
-        try:
-            result = self.MQL5("copyopenTC," + str(symbol).upper() + "," + MQL5Period(period) + "," + str(start_time) + "," + str(count))[0]
-            return [float(i) for i in result]        
-        except: return None
+        return self.TimeSeriresCopy("copyopenTC", symbol, period, None, count, start_time, None, "float")
         
     def CopyOpenTT(self, symbol, period, start_time, stop_time):
-        try:
-            result = self.MQL5("copyopenTT," + str(symbol).upper() + "," + MQL5Period(period) + "," + str(start_time) + "," + str(stop_time))[0]
-            return [float(i) for i in result]
-        except: return None
+        return self.TimeSeriresCopy("copyopenTT", symbol, period, None, None, start_time, stop_time, "float")
         
-    def CopyHigh(self, symbol, period, start_pos, count):
-        try:
-            result = self.MQL5("copyhigh," + str(symbol).upper() + "," + MQL5Period(period) + "," + str(start_pos) + "," + str(count))[0]
-            return [float(i) for i in result]
-        except: return None
-    
+    def CopyHigh(self, symbol, period, start_Pos, count):
+        return self.TimeSeriresCopy("copyhigh", symbol, period, start_Pos, count, None, None, "float")
+        
     def CopyHighTC(self, symbol, period, start_time, count):
-        try:
-            result = self.MQL5("copyhighTC," + str(symbol).upper() + "," + MQL5Period(period) + "," + str(start_time) + "," + str(count))[0]        
-            return [float(i) for i in result]
-        except: return None
+        return self.TimeSeriresCopy("copyhighTC", symbol, period, None, count, start_time, None, "float")
 
     def CopyHighTT(self, symbol, period, start_time, stop_time):
-        try:
-            result =  self.MQL5("copyhighTT," + str(symbol).upper() + "," + MQL5Period(period) + "," + str(start_time) + "," + str(stop_time))[0]
-            return [float(i) for i in result]
-        except: return None
+        return self.TimeSeriresCopy("copyhighTT", symbol, period, None, None, start_time, stop_time, "float")
 
-    def CopyLow(self, symbol, period, start_pos, count):
-        try:
-            result = self.MQL5("copylow," + str(symbol).upper() + "," + MQL5Period(period) + "," + str(start_pos) + "," + str(count))[0]        
-            return [float(i) for i in result]
-        except: return None
+    def CopyLow(self, symbol, period, start_Pos, count):
+        return self.TimeSeriresCopy("copylow", symbol, period, start_Pos, count, None, None, "float")
     
     def CopyLowTC(self, symbol, period, start_time, count):
-        try:
-            result = self.MQL5("copylowTC," + str(symbol).upper() + "," + MQL5Period(period) + "," + str(start_time) + "," + str(count))[0]        
-            return [float(i) for i in result]
-        except: return None
+        return self.TimeSeriresCopy("copylowTC", symbol, period, None, count, start_time, None, "float")
 
     def CopyLowTT(self, symbol, period, start_time, stop_time):
-        try:
-            result = self.MQL5("copylowTT," + str(symbol).upper() + "," + MQL5Period(period) + "," + str(start_time) + "," + str(stop_time))[0]
-            return [float(i) for i in result]
-        except: return None
+        return self.TimeSeriresCopy("copylowTT", symbol, period, None, None, start_time, stop_time, "float")
 
-    def CopyClose(self, symbol, period, start_pos, count):
-        try:
-            result = self.MQL5("copyclose," + str(symbol).upper() + "," + MQL5Period(period) + "," + str(start_pos) + "," + str(count))[0]        
-            return [float(i) for i in result]
-        except: return None
+    def CopyClose(self, symbol, period, start_Pos, count):
+        return self.TimeSeriresCopy("copyclose", symbol, period, start_Pos, count, None, None, "float")
     
     def CopyCloseTC(self, symbol, period, start_time, count):
-        try:
-            result = self.MQL5("copycloseTC," + str(symbol).upper() + "," + MQL5Period(period) + "," + str(start_time) + "," + str(count))[0]        
-            return [float(i) for i in result]
-        except: return None
-
+        return self.TimeSeriresCopy("copycloseTC", symbol, period, None, count, start_time, None, "float")
+    
     def CopyCloseTT(self, symbol, period, start_time, stop_time):
-        try:
-            result = self.MQL5("copycloseTT," + str(symbol).upper() + "," + MQL5Period(period) + "," + str(start_time) + "," + str(stop_time))[0]
-            return [float(i) for i in result]
-        except: return None
+        return self.TimeSeriresCopy("copycloseTT", symbol, period, None, None, start_time, stop_time, "float")
 
-    def CopyVolume(self, symbol, period, start_pos, count):
-        try:
-            result = self.MQL5("copyvolume," + str(symbol).upper() + "," + MQL5Period(period) + "," + str(start_pos) + "," + str(count))[0]        
-            return [int(i) for i in result]
-        except: return None
+    def CopyVolume(self, symbol, period, start_Pos, count):
+        return self.TimeSeriresCopy("copyvolume", symbol, period, start_Pos, count, None, None, "float")
     
     def CopyVolumeTC(self, symbol, period, start_time, count):
-        try:
-            result = self.MQL5("copyvolumeTC," + str(symbol).upper() + "," + MQL5Period(period) + "," + str(start_time) + "," + str(count))[0]        
-            return [int(i) for i in result]
-        except: return None
-
+        return self.TimeSeriresCopy("copyvolumeTC", symbol, period, None, count, start_time, None, "float")
+    
     def CopyVolumeTT(self, symbol, period, start_time, stop_time):
-        try:
-            result = self.MQL5("copyvolumeTT," + str(symbol).upper() + "," + MQL5Period(period) + "," + str(start_time) + "," + str(stop_time))[0]
-            return [int(i) for i in result]
-        except: return None
-
+        return self.TimeSeriresCopy("copyvolumeTT", symbol, period, None, None, start_time, stop_time, "float")
+       
     def CopyTicks(self, symbol, Start_Time_MSC, count):
         try:
             result = self.MQL5("copyticks," + str(symbol).upper() + "," + str(Start_Time_MSC) + "," + str(count))
             return [dictMQLTick(i) for i in result]        
-        except: return None
+        except: 
+            logger.exception("Erro def CopyTicks " + symbol + "," + Start_Time_MSC + "," + count)
+            return None
 
     def CopyTicksRange(self, symbol, Start_Time_MSC, Stop_Time_MSC):
         try:
             result = self.MQL5("copyticksrange," + str(symbol).upper() + "," + str(Start_Time_MSC) + "," + str(Stop_Time_MSC))
             return [dictMQLTick(i) for i in result]
-        except: return None
+        except: 
+            logger.exception("Erro def CopyTicksRange " + symbol + "," + Start_Time_MSC + "," + Stop_Time_MSC)
+            return None
 
     def Buy(self, symbol, volume, price, sl, tp, comment):
-        try: return int(self.MQL5("buy," + str(symbol).upper() + "," + str(volume) + "," + str(price) + "," + str(sl) + "," + str(tp) + "," + str(comment)))
-        except: return None
+        return self.SendTrade("buy", symbol, volume, price, sl, tp, comment)
     
     def Sell(self, symbol, volume, price, sl, tp, comment):
-        try: return int(self.MQL5("sell," + str(symbol).upper() + "," + str(volume) + "," + str(price) + "," + str(sl) + "," + str(tp) + "," + str(comment)))
-        except: return None
-    
+        return self.SendTrade("sell", symbol, volume, price, sl, tp, comment)
+      
     def BuyLimit(self, symbol, volume, price, sl, tp, comment):
-        try: return int(self.MQL5("buylimit," + str(symbol).upper() + "," + str(volume) + "," + str(price) + "," + str(sl) + "," + str(tp) + "," + str(comment)))
-        except: return None
-
+        return self.SendTrade("buylimit", symbol, volume, price, sl, tp, comment)
+     
     def SellLimit(self, symbol, volume, price, sl, tp, comment):
-        try: return int(self.MQL5("selllimit," + str(symbol).upper() + "," + str(volume) + "," + str(price) + "," + str(sl) + "," + str(tp) + "," + str(comment)))
-        except: return None
-
+        return self.SendTrade("selllimit", symbol, volume, price, sl, tp, comment)
+        
     def BuyStop(self, symbol, volume, price, sl, tp, comment):
-        try: return int(self.MQL5("buystop," + str(symbol).upper() + "," + str(volume) + "," + str(price) + "," + str(sl) + "," + str(tp) + "," + str(comment)))
-        except: return None
+        return self.SendTrade("buystop", symbol, volume, price, sl, tp, comment)
 
     def SellStop(self, symbol, volume, price, sl, tp, comment): 
-        try: return int(self.MQL5("sellstop," + str(symbol).upper() + "," + str(volume) + "," + str(price) + "," + str(sl) + "," + str(TP) + "," + str(comment)))
-        except: return None
-
+        return self.SendTrade("sellstop", symbol, volume, price, sl, tp, comment)
+    
     def PositionsTotal(self):
         try: return int(self.MQL5("positionstotal"))
         except: return None
@@ -235,40 +224,76 @@ class PyMQL5:
         except: return None
 
     def CancelAllOrder(self):
-        try: return int(self.MQL5("cancelallorder"))
-        except: return None
+        try: 
+            logger.info("CancelAllOrder")
+            return int(self.MQL5("cancelallorder"))
+        except: 
+            logger.exception("CancelAllOrder")
+            return None
 
     def OrderDelete(self, ticket):
-        try: return int(self.MQL5("orderdelete," + str(ticket)))
-        except: return None
+        try: 
+            logger.info("OrderDelete ticket=" + ticket)
+            return int(self.MQL5("orderdelete," + str(ticket)))
+        except:
+            logger.exception("OrderDelete ticket=" + ticket) 
+            return None
 
     def PositionCloseSymbol(self, symbol):
-        try: return int(self.MQL5("positionclosesymbol," + str(symbol).upper()))
-        except: return None
+        try: 
+            logger.info("PositionCloseSymbol symbol=" + symbol)
+            return int(self.MQL5("positionclosesymbol," + str(symbol).upper()))
+        except: 
+            logger.exception("PositionCloseSymbol symbol=" + symbol) 
+            return None
 
     def PositionCloseTicket(self, ticket):
-        try: return int(self.MQL5("positioncloseticket," + str(ticket)))
-        except: return None
+        try:
+            logger.info("PositionCloseTicket ticket=" + ticket) 
+            return int(self.MQL5("positioncloseticket," + str(ticket)))
+        except:
+            logger.exception("PositionCloseTicket ticket=" + ticket) 
+            return None
 
     def PositionClosePartial(self, ticket, volume):
-        try: return int(self.MQL5("positionclosepartial," + str(ticket) + "," + str(volume)))
-        except: return None
+        try: 
+            logger.info("PositionClosePartial ticket=" + ticket + ", volume=" + volume)
+            return int(self.MQL5("positionclosepartial," + str(ticket) + "," + str(volume)))
+        except: 
+            logger.exception("PositionClosePartial ticket=" + ticket + ", volume=" + volume) 
+            return None
 
     def PositionModifySymbol(self, symbol, sl, tp):
-        try: return int(self.MQL5("positionmodifysymbol," + str(symbol).upper() + "," + str(sl) + "," + str(tp)))
-        except: return None
+        try: 
+            logger.info("PositionModifySymbol symbol=" + symbol + ", sl=" + sl + ", tp=" + tp)
+            return int(self.MQL5("positionmodifysymbol," + str(symbol).upper() + "," + str(sl) + "," + str(tp)))
+        except: 
+            logger.exception("PositionModifySymbol symbol=" + symbol + ", sl=" + sl + ", tp=" + tp)
+            return None
 
     def PositionModifyTicket(self, ticket, sl, tp):
-        try: return int(self.MQL5("positionmodifyticket," + str(ticket) + "," + str(sl) + "," + str(tp)))
-        except: return None
+        try:
+            logger.info("PositionModifyTicket symbol=" + ticket + ", sl=" + sl + ", tp=" + tp)
+            return int(self.MQL5("positionmodifyticket," + str(ticket) + "," + str(sl) + "," + str(tp)))
+        except: 
+            logger.exception("PositionModifyTicket symbol=" + ticket + ", sl=" + sl + ", tp=" + tp)
+            return None
 
     def CancelAllPosition(self):
-        try: return int(self.MQL5("cancelallposition"))
-        except: return None
+        try: 
+            logger.info("CancelAllPosition")
+            return int(self.MQL5("cancelallposition"))
+        except: 
+            logger.exception("CancelAllPosition")
+            return None
 
     def SetEAMagicNumber(self, number):
-        try: return int(self.MQL5("seteamagicnumber," + str(number)))
-        except: return None
+        try: 
+            logger.info("SetEAMagicNumber number=" + number)
+            return int(self.MQL5("seteamagicnumber," + str(number)))
+        except:
+            logger.exception("SetEAMagicNumber number=" + number)
+            return None
 
     def SymbolInfoAll(self, symbol):
         result = self.MQL5("symbolinfoall," + str(symbol).upper())[0]
