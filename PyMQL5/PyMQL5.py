@@ -28,7 +28,7 @@ class PyMQL5:
             recv, _ = self.client.recvfrom(1024000)
             return MQL5parse(recv.decode("utf-8"))
         except:
-            logger.exception("Erro de comunicação (def MQL5 " + str(text) + ")")
+            logger.exception("Error de comunicação (def MQL5 " + str(text) + ")")
             return None
 
 
@@ -41,7 +41,7 @@ class PyMQL5:
                 return datetime.strptime(dado, "%Y.%m.%d %H:%M")
             return None
         except:
-            logger.exception(str(_type) + str(symbol).upper() + "," + MQL5Period(period)  + "," + str(shift))
+            logger.exception("Error " + str(_type) + " " + str(symbol).upper() + "," + MQL5Period(period)  + "," + str(shift))
             return None
     
     def TimeSeriresCopy(self, _type, symbol, period, start_Pos, count, start_time, stop_time, formate):
@@ -60,7 +60,7 @@ class PyMQL5:
                 return [float(i) for i in result]
             return None
         except:
-            logger.exception(str(_type) + str(symbol).upper() + "," + MQL5Period(period) + "," + str(start_Pos) + "," + str(count) + "," + str(start_time) + "," + str(stop_time))
+            logger.exception("Error " + str(_type) + str(symbol).upper() + "," + MQL5Period(period) + "," + str(start_Pos) + "," + str(count) + "," + str(start_time) + "," + str(stop_time))
             return None
 
     def SendTrade(self, _type, symbol, volume, price, sl, tp, comment):
@@ -68,7 +68,7 @@ class PyMQL5:
             logger.info("Trade " + str(_type) + "," + str(symbol).upper() + "," + str(volume) + "," + str(price) + "," + str(sl) + "," + str(tp) + "," + str(comment))
             return int(self.MQL5(str(_type) + "," + str(symbol).upper() + "," + str(volume) + "," + str(price) + "," + str(sl) + "," + str(tp) + "," + str(comment)))
         except:
-            logger.exception("Trade " + str(_type) + "," + str(symbol).upper() + "," + str(volume) + "," + str(price) + "," + str(sl) + "," + str(tp) + "," + str(comment))
+            logger.exception("Erro Trade " + str(_type) + "," + str(symbol).upper() + "," + str(volume) + "," + str(price) + "," + str(sl) + "," + str(tp) + "," + str(comment))
             return None
     
     def iOpen(self, symbol, period, shift):
@@ -84,7 +84,7 @@ class PyMQL5:
         return self.TimeSeriresI("iclose", symbol, period, shift, "float")
         
     def iTime(self, symbol, period, shift):
-        return self.TimeSeriresI("iclose", symbol, period, shift, "date")
+        return self.TimeSeriresI("itime", symbol, period, shift, "date")
         
     def iVolume(self, symbol, period, shift):
         return self.TimeSeriresI("ivolume", symbol, period, shift, "float")
@@ -148,7 +148,7 @@ class PyMQL5:
             result = self.MQL5("copyticks," + str(symbol).upper() + "," + str(Start_Time_MSC) + "," + str(count))
             return [dictMQLTick(i) for i in result]        
         except: 
-            logger.exception("Erro def CopyTicks " + symbol + "," + Start_Time_MSC + "," + count)
+            logger.exception("Erro def CopyTicks " + str(symbol).upper() + "," + str(Start_Time_MSC) + "," + str(count))
             return None
 
     def CopyTicksRange(self, symbol, Start_Time_MSC, Stop_Time_MSC):
@@ -156,7 +156,7 @@ class PyMQL5:
             result = self.MQL5("copyticksrange," + str(symbol).upper() + "," + str(Start_Time_MSC) + "," + str(Stop_Time_MSC))
             return [dictMQLTick(i) for i in result]
         except: 
-            logger.exception("Erro def CopyTicksRange " + symbol + "," + Start_Time_MSC + "," + Stop_Time_MSC)
+            logger.exception("Erro def CopyTicksRange " + str(symbol).upper() + "," + str(Start_Time_MSC) + "," + str(Stop_Time_MSC))
             return None
 
     def Buy(self, symbol, volume, price, sl, tp, comment):
@@ -178,50 +178,72 @@ class PyMQL5:
         return self.SendTrade("sellstop", symbol, volume, price, sl, tp, comment)
     
     def PositionsTotal(self):
-        try: return int(self.MQL5("positionstotal"))
-        except: return None
+        try: 
+            return int(self.MQL5("positionstotal"))
+        except: 
+            logger.exception("Error PositionsTotal")
+            return None
 
     def PositionAll(self):
         try:
             result = self.MQL5("positionall")
             return [dictPOSITION(i) for i in result]
-        except: return None
+        except: 
+            logger.exception("Error PositionAll")
+            return None
 
     def OrdersTotal(self):
-        try: return int(self.MQL5("orderstotal"))
-        except: return None
+        try: 
+            return int(self.MQL5("orderstotal"))
+        except: 
+            logger.exception("Error OrdersTotal")
+            return None
 
     def OrderAll(self):
         try:
             result = self.MQL5("orderall")
             return [dictORDER(i) for i in result]
-        except: return None
+        except: 
+            logger.exception("Error OrderAll")
+            return None
 
     def AccountInfoAll(self):
         try:
             result = self.MQL5("accountinfoall")
             return [dictACCOUNT(i) for i in result]
-        except: return None
+        except: 
+            logger.exception("Error AccountInfoAll")
+            return None
 
     def HistoryDealTotalDay(self):
-        try: return int(self.MQL5("historydealtotalday"))
-        except: return None
+        try: 
+            return int(self.MQL5("historydealtotalday"))
+        except: 
+            logger.exception("Error HistoryDealTotalDay")
+            return None
 
     def HistoryDealTotal(self, Start_Time, Stop_Time):
-        try: return int(self.MQL5("historydealtotal," + str(Start_Time) + "," + str(Stop_Time)))
-        except: return None
+        try: 
+            return int(self.MQL5("historydealtotal," + str(Start_Time) + "," + str(Stop_Time)))
+        except: 
+            logger.exception("Error HistoryDealTotal," + str(Start_Time) + "," + str(Stop_Time))
+            return None
 
     def HistoryDealAllDay(self):
         try:
             result = self.MQL5("historydealallday")
             return [dictDEAL(i) for i in result]
-        except: return None
+        except: 
+            logger.exception("Error HistoryDealAllDay")
+            return None
 
     def HistoryDealAll(self, Start_Time, Stop_Time):      
         try:
             result = self.MQL5("historydealall," + str(Start_Time) + "," + str(Stop_Time))
             return [dictDEAL(i) for i in result]       
-        except: return None
+        except: 
+            logger.exception("Error HistoryDealAll," + str(Start_Time) + "," + str(Stop_Time))
+            return None
 
     def CancelAllOrder(self):
         try: 
@@ -233,50 +255,50 @@ class PyMQL5:
 
     def OrderDelete(self, ticket):
         try: 
-            logger.info("OrderDelete ticket=" + ticket)
+            logger.info("OrderDelete ticket=" + str(ticket))
             return int(self.MQL5("orderdelete," + str(ticket)))
         except:
-            logger.exception("OrderDelete ticket=" + ticket) 
+            logger.exception("OrderDelete ticket=" + str(ticket)) 
             return None
 
     def PositionCloseSymbol(self, symbol):
         try: 
-            logger.info("PositionCloseSymbol symbol=" + symbol)
+            logger.info("PositionCloseSymbol symbol=" + str(symbol).upper())
             return int(self.MQL5("positionclosesymbol," + str(symbol).upper()))
         except: 
-            logger.exception("PositionCloseSymbol symbol=" + symbol) 
+            logger.exception("PositionCloseSymbol symbol=" + str(symbol).upper()) 
             return None
 
     def PositionCloseTicket(self, ticket):
         try:
-            logger.info("PositionCloseTicket ticket=" + ticket) 
+            logger.info("PositionCloseTicket ticket=" + str(ticket)) 
             return int(self.MQL5("positioncloseticket," + str(ticket)))
         except:
-            logger.exception("PositionCloseTicket ticket=" + ticket) 
+            logger.exception("PositionCloseTicket ticket=" + str(ticket)) 
             return None
 
     def PositionClosePartial(self, ticket, volume):
         try: 
-            logger.info("PositionClosePartial ticket=" + ticket + ", volume=" + volume)
+            logger.info("PositionClosePartial ticket=" + str(ticket) + ", volume=" + str(volume))
             return int(self.MQL5("positionclosepartial," + str(ticket) + "," + str(volume)))
         except: 
-            logger.exception("PositionClosePartial ticket=" + ticket + ", volume=" + volume) 
+            logger.exception("PositionClosePartial ticket=" + str(ticket) + ", volume=" + str(volume)) 
             return None
 
     def PositionModifySymbol(self, symbol, sl, tp):
         try: 
-            logger.info("PositionModifySymbol symbol=" + symbol + ", sl=" + sl + ", tp=" + tp)
+            logger.info("PositionModifySymbol symbol=" + str(symbol).upper() + ", sl=" + str(sl) + ", tp=" + str(tp))
             return int(self.MQL5("positionmodifysymbol," + str(symbol).upper() + "," + str(sl) + "," + str(tp)))
         except: 
-            logger.exception("PositionModifySymbol symbol=" + symbol + ", sl=" + sl + ", tp=" + tp)
+            logger.exception("PositionModifySymbol symbol=" + str(symbol).upper() + ", sl=" + str(sl) + ", tp=" + str(tp))
             return None
 
     def PositionModifyTicket(self, ticket, sl, tp):
         try:
-            logger.info("PositionModifyTicket symbol=" + ticket + ", sl=" + sl + ", tp=" + tp)
+            logger.info("PositionModifyTicket symbol=" + str(ticket) + ", sl=" + str(sl) + ", tp=" + str(tp))
             return int(self.MQL5("positionmodifyticket," + str(ticket) + "," + str(sl) + "," + str(tp)))
         except: 
-            logger.exception("PositionModifyTicket symbol=" + ticket + ", sl=" + sl + ", tp=" + tp)
+            logger.exception("PositionModifyTicket symbol=" + str(ticket) + ", sl=" + str(sl) + ", tp=" + str(tp))
             return None
 
     def CancelAllPosition(self):
@@ -289,16 +311,20 @@ class PyMQL5:
 
     def SetEAMagicNumber(self, number):
         try: 
-            logger.info("SetEAMagicNumber number=" + number)
+            logger.info("SetEAMagicNumber number=" + str(number))
             return int(self.MQL5("seteamagicnumber," + str(number)))
         except:
-            logger.exception("SetEAMagicNumber number=" + number)
+            logger.exception("SetEAMagicNumber number=" + str(number))
             return None
 
     def SymbolInfoAll(self, symbol):
-        result = self.MQL5("symbolinfoall," + str(symbol).upper())[0]
-        if result == None: return result
-        return result
+        try:
+            result = self.MQL5("symbolinfoall," + str(symbol).upper())[0]
+            return result
+        except:
+            logger.exception("SymbolInfoAll symbol=" + str(symbol).upper())
+            return None
+
 
     def OptionInfo(self, symbol):
         try:
@@ -314,7 +340,9 @@ class PyMQL5:
                     'LAST': float(result[7]),
                     'VOLUME_REAL': float(result[8])
                 }
-        except: return None
+        except: 
+            logger.exception("OptionInfo symbol=" + str(symbol).upper())
+            return None
 
 def dictPOSITION(i):
     try:
