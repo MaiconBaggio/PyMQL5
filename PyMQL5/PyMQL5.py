@@ -185,7 +185,7 @@ class PyMQL5:
         except: return None
 
     def SellStop(self, symbol, volume, price, sl, tp, comment): 
-        try: return int(self.MQL5("sellstop," + str(symbol).upper() + "," + str(volume) + "," + str(price) + "," + str(sl) + "," + str(TP) + "," + str(comment)))
+        try: return int(self.MQL5("sellstop," + str(symbol).upper() + "," + str(volume) + "," + str(price) + "," + str(sl) + "," + str(tp) + "," + str(comment)))
         except: return None
 
     def PositionsTotal(self):
